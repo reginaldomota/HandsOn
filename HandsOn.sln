@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36327.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contas.API", "HandsOn\Contas.API.csproj", "{E53A8B71-A960-49FE-A4E7-B0C90B06CC91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChartOfAccounts.Api", "HandsOn\ChartOfAccounts.Api.csproj", "{E53A8B71-A960-49FE-A4E7-B0C90B06CC91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
