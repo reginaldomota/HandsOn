@@ -21,10 +21,10 @@ Guia prático para subir containers PostgreSQL, pgAdmin e uma aplicação ASP.NE
 - [🌐 2. Criar rede Docker](#2-criar-rede-docker)
 - [🐘 3. Executar PostgreSQL](#3-executar-postgresql)
 - [🛀️ 4. Criar arquivo servers.json](#4-criar-arquivo-serversjson)
-- [🖥️ 5. Executar pgAdmin](#5-executar-pgadmin)
+- [💻 5. Executar pgAdmin](#5-executar-pgadmin)
 - [🧪 6. Build e execução do projeto HandsOn](#6-build-e-execucao-do-projeto-handson)
-- [📘 7. Criar estrutura de plano de contas](#7-criar-estrutura-de-plano-de-contas)
-- [📥 8. Inserir dados iniciais](#8-inserir-dados-iniciais)
+- [📘️ 7. Criar estrutura de plano de contas](#7-criar-estrutura-de-plano-de-contas)
+- [📅 8. Inserir dados iniciais](#8-inserir-dados-iniciais)
 - [🌍 9. Acessar pgAdmin](#9-acessar-pgadmin)
 - [🔗 10. Acessar Swagger da API](#10-acessar-swagger-da-api)
 
@@ -80,9 +80,12 @@ Salve no mesmo diretório onde você irá rodar o pgAdmin.
 
 ---
 
-## 🖥️ 5. Executar pgAdmin
+## 💻 5. Executar pgAdmin
 
-> `$(pwd)` (Linux/macOS) ou `${PWD}` (Windows PowerShell) representa o caminho absoluto da pasta atual.
+> `$(pwd)` (Linux/macOS) ou `${PWD}` (Windows PowerShell) representa o caminho absoluto da pasta atual. Para obter este caminho, utilize:
+>
+> - Linux/macOS: `pwd`
+> - PowerShell: `${PWD}`
 
 ### 💼 Linux/macOS:
 
@@ -90,7 +93,7 @@ Salve no mesmo diretório onde você irá rodar o pgAdmin.
 docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="reginaldomotacc@gmail.com" -e PGADMIN_DEFAULT_PASSWORD="rm1234" -v "$(pwd)/servers.json":/pgadmin4/servers.json -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
 ```
 
-### 🪠 Windows PowerShell:
+### 🩠 Windows PowerShell:
 
 ```powershell
 docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="reginaldomotacc@gmail.com" -e PGADMIN_DEFAULT_PASSWORD="rm1234" -v "${PWD}\servers.json:/pgadmin4/servers.json" -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
@@ -148,30 +151,30 @@ docker run -d -p 8080:8080 --network container_network --name hands-on-container
 
 ---
 
-## 📘 7. Criar estrutura de plano de contas
+## 📘️ 7. Criar estrutura de plano de contas
 
 Baixe o arquivo de criação da tabela:
 
-📄 [`chart_of_accounts.sql`](Scripts/chart_of_accounts.sql)
+📄 [`table_chart_of_accounts.sql`](Scripts/table_chart_of_accounts.sql)
 
 ```bash
-docker cp chart_of_accounts.sql Postgres:/chart_of_accounts.sql
+docker cp Scripts/table_chart_of_accounts.sql Postgres:/table_chart_of_accounts.sql
 
-docker exec -it Postgres psql -U root -d accounts -f /chart_of_accounts.sql
+docker exec -it Postgres psql -U root -d accounts -f /table_chart_of_accounts.sql
 ```
 
 ---
 
-## 📥 8. Inserir dados iniciais
+## 📅 8. Inserir dados iniciais
 
 Baixe e copie o arquivo de inserção:
 
-📄 [`insert_chart_of_accounts_descricao_pt.sql`](Scripts/insert_chart_of_accounts_descricao_pt.sql)
+📄 [`insert_data_chart_of_accounts.sql`](Scripts/insert_data_chart_of_accounts.sql)
 
 ```bash
-docker cp insert_chart_of_accounts_descricao_pt.sql Postgres:/insert_chart_of_accounts_descricao_pt.sql
+docker cp Scripts/insert_data_chart_of_accounts.sql Postgres:/insert_data_chart_of_accounts.sql
 
-docker exec -it Postgres psql -U root -d accounts -f /insert_chart_of_accounts_descricao_pt.sql
+docker exec -it Postgres psql -U root -d accounts -f /insert_data_chart_of_accounts.sql
 ```
 
 ---
