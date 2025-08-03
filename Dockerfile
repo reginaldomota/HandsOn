@@ -6,19 +6,21 @@ ENV ASPNETCORE_URLS=http://+:8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ["ChartOfAccounts.Api.csproj", "."]
-RUN dotnet restore "ChartOfAccounts.Api.csproj"
+COPY ["ChartOfAccounts.Api/ChartOfAccounts.Api.csproj", "ChartOfAccounts.Api/"]
+RUN dotnet restore "ChartOfAccounts.Api/ChartOfAccounts.Api.csproj"
 
 COPY . .
+WORKDIR /src/ChartOfAccounts.Api
 RUN dotnet build "ChartOfAccounts.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
+WORKDIR /src/ChartOfAccounts.Api
 RUN dotnet publish "ChartOfAccounts.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 
 COPY --from=publish /app/publish .
-COPY appsettings.json .
+COPY ChartOfAccounts.Api/appsettings.json .
 
 ENTRYPOINT ["dotnet", "ChartOfAccounts.Api.dll"]
