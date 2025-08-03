@@ -8,35 +8,25 @@ namespace ChartOfAccounts.Api.Controllers.v1;
 [ApiController]
 public class AccountsController : ControllerBase
 {
-    // GET: api/<ChartOfAccountsController>
     [HttpGet]
     public IEnumerable<string> Get()
     {
         return new string[] { "value1", "value2" };
     }
 
-    // GET api/<ChartOfAccountsController>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
+    [HttpGet("{code}")]
+    public string Get(string code)
     {
         return "value";
     }
 
-    // POST api/<ChartOfAccountsController>
     [HttpPost]
     public void Post([FromBody] string value)
     {
     }
 
-    // PUT api/<ChartOfAccountsController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
-    {
-    }
-
-    // DELETE api/<ChartOfAccountsController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
+    [HttpDelete("{code}")]
+    public void Delete(string code)
     {
     }
 }
