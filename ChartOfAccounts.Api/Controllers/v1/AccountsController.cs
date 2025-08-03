@@ -6,7 +6,7 @@ namespace ChartOfAccounts.Api.Controllers.v1;
 [ApiVersion(1.0)]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class ChartOfAccountsController : ControllerBase
+public class AccountsController : ControllerBase
 {
     // GET: api/<ChartOfAccountsController>
     [HttpGet]
