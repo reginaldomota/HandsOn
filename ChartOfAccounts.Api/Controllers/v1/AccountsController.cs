@@ -1,32 +1,32 @@
-﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ChartOfAccounts.Api.Controllers.v1;
 
-[ApiVersion(1.0)]
-[Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
+[ApiExplorerSettings(GroupName = "v1")]
+[Route("api/v1/accounts")]
+[Tags("Plano de Contas")]
 public class AccountsController : ControllerBase
 {
     [HttpGet]
-    public IEnumerable<string> Get()
+    public IEnumerable<string> GetAllAccounts()
     {
         return new string[] { "value1", "value2" };
     }
 
     [HttpGet("{code}")]
-    public string Get(string code)
+    public string GetAccountByCode(string code)
     {
         return "value";
     }
 
     [HttpPost]
-    public void Post([FromBody] string value)
+    public void CreateAccount([FromBody] string value)
     {
     }
 
     [HttpDelete("{code}")]
-    public void Delete(string code)
+    public void DeleteAccount(string code)
     {
     }
 }
