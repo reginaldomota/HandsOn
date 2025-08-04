@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+﻿using ChartOfAccounts.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChartOfAccounts.Api.Controllers.v1;
@@ -9,9 +9,21 @@ namespace ChartOfAccounts.Api.Controllers.v1;
 [Tags("Plano de Contas")]
 public class AccountCodeSuggestionController : ControllerBase
 {
-    [HttpGet("{parentCode}")]
-    public string SuggestNextCode(string parentCode)
+    private readonly IAccountCodeSuggestionService _suggestionService;
+
+    public AccountCodeSuggestionController(IAccountCodeSuggestionService suggestionService)
     {
-        return "value";
+        _suggestionService = suggestionService;
+    }
+
+    [HttpGet("{parentCode}")]
+    public async Task<ActionResult<string>> SuggestNextCode(string parentCode)
+    {
+        string suggestion = await _suggestionService.SuggestNextCodeAsync(parentCode);
+
+        if (string.IsNullOrWhiteSpace(suggestion))
+            return NotFound("Não foi possível sugerir um próximo código.");
+
+        return Ok(suggestion);
     }
 }

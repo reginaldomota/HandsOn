@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.7" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChartOfAccounts.Application\ChartOfAccounts.Application.csproj" />
+    <ProjectReference Include="..\ChartOfAccounts.Domain\ChartOfAccounts.Domain.csproj" />
+    <ProjectReference Include="..\ChartOfAccounts.Infrastructure\ChartOfAccounts.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

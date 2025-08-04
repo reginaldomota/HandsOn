@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using ChartOfAccounts.CrossCutting.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,8 @@ builder.Services.AddSwaggerGen(options =>
     options.DocInclusionPredicate((docName, apiDesc) =>
         apiDesc.GroupName == docName);
 });
+
+builder.Services.RegisterAllDependencies(builder.Configuration);
 
 var app = builder.Build();
 
