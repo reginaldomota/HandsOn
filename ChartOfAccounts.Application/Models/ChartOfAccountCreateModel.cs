@@ -16,6 +16,4 @@ public class ChartOfAccountCreateModel
     public string Type { get; set; } = default!;
 
     public bool IsPostable { get; set; }
-
-    public string? ParentCode { get; set; }
 }

@@ -1,4 +1,5 @@
 ﻿using ChartOfAccounts.Application.Interfaces;
+using ChartOfAccounts.Application.Mappers;
 using ChartOfAccounts.Application.Models;
 using ChartOfAccounts.Application.Responses;
 using ChartOfAccounts.Domain.Entities;
@@ -47,17 +48,7 @@ public class AccountsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] ChartOfAccountCreateModel model)
     {
-        ChartOfAccount account = new ChartOfAccount
-        {
-            Code = model.Code,
-            Name = model.Name,
-            Description = model.Description,
-            Type = model.Type,
-            IsPostable = model.IsPostable,
-            ParentCode = model.ParentCode,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
+        ChartOfAccount account = model.ToEntity();
 
         await _service.AddAsync(account);
 
