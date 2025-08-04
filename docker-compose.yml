@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    networks:
+      - chart_network
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  chart-api:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: chart-api
+    ports:
+      - "8080:8080"
+    environment:
+      ConnectionStrings__DefaultConnection: ${CONNECTION_STRING}
+    depends_on:
+      - postgres
+    networks:
+      - chart_network
+
+networks:
+  chart_network:
+
+volumes:
+  pg_data:
