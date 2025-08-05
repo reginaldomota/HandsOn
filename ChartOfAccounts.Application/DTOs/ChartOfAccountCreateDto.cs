@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ChartOfAccounts.Application.Models;
+namespace ChartOfAccounts.Application.DTOs;
 
-public class ChartOfAccountCreateModel
+public class ChartOfAccountCreateDto
 {
     [Required]
     public string Code { get; set; } = default!;

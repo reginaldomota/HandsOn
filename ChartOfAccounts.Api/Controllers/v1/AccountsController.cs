@@ -1,6 +1,6 @@
-﻿using ChartOfAccounts.Application.Interfaces;
+﻿using ChartOfAccounts.Application.DTOs;
+using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Application.Mappers;
-using ChartOfAccounts.Application.Models;
 using ChartOfAccounts.Application.Models.Common;
 using ChartOfAccounts.Application.Responses;
 using ChartOfAccounts.Domain.Entities;
@@ -54,7 +54,7 @@ public class AccountsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] ChartOfAccountCreateModel model)
+    public async Task<IActionResult> Create([FromBody] ChartOfAccountCreateDto model)
     {
         ChartOfAccount account = model.ToEntity();
 

@@ -1,12 +1,12 @@
-﻿using ChartOfAccounts.Application.Helpers;
-using ChartOfAccounts.Application.Models;
+﻿using ChartOfAccounts.Application.DTOs;
+using ChartOfAccounts.Application.Helpers;
 using ChartOfAccounts.Domain.Entities;
 
 namespace ChartOfAccounts.Application.Mappers;
 
 public static class ChartOfAccountMapper
 {
-    public static ChartOfAccount ToEntity(this ChartOfAccountCreateModel model)
+    public static ChartOfAccount ToEntity(this ChartOfAccountCreateDto model)
     {
         return new ChartOfAccount
         {
