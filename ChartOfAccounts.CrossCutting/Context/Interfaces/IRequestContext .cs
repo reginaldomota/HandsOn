@@ -3,5 +3,5 @@
 public interface IRequestContext
 {
     string? TenantId { get; }
-    string RequestIdentifier { get; }
+    string RequestId { get; }
 }
