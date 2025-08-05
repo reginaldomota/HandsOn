@@ -26,6 +26,31 @@ builder.Services.AddSwaggerGen(options =>
     // Inclui somente endpoints que pertencem à versão correspondente
     options.DocInclusionPredicate((docName, apiDesc) =>
         apiDesc.GroupName == docName);
+
+    OpenApiSecurityScheme jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Description = "Informe o token JWT no formato: Bearer {seu_token}",
+        Reference = new OpenApiReference
+        {
+            Id = "Bearer",
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+
+    options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            jwtSecurityScheme,
+            Array.Empty<string>()
+        }
+    });
 });
 
 builder.Services.RegisterAllDependencies(builder.Configuration);
