@@ -2,5 +2,5 @@
 
 public interface IAccountCodeSuggestionService
 {
-    Task<string> SuggestNextCodeAsync(string parentCode);
+    Task<string?> SuggestNextCodeAsync(string parentCode);
 }
