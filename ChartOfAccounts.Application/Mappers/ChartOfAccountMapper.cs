@@ -15,6 +15,7 @@ public static class ChartOfAccountMapper
             Type = model.Type,
             IsPostable = model.IsPostable,
             CodeNormalized = CodeNormalizer.Normalize(model.Code),
+            ParentCode = ParentCode.GetParentCode(model.Code),
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };

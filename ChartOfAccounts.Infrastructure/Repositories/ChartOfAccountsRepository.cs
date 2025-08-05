@@ -14,11 +14,6 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<ChartOfAccount>> GetAllAsync()
-    {
-        return await _context.ChartOfAccounts.ToListAsync();
-    }
-
     public async Task<(List<ChartOfAccount> Items, int TotalCount)> GetPagedAsync(int page, int pageSize)
     {
         IQueryable<ChartOfAccount> query = _context.ChartOfAccounts.OrderBy(x => x.CodeNormalized);
