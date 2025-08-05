@@ -1,6 +1,7 @@
-﻿using ChartOfAccounts.CrossCutting.DependencyInjection;
-using Microsoft.OpenApi.Models;
+﻿using ChartOfAccounts.Api.Middlewares;
+using ChartOfAccounts.CrossCutting.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,8 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 var apiVersions = new[] { "v1" };
 
 // Add services
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+
 
 // Swagger configurado para múltiplas versões
 builder.Services.AddSwaggerGen(options =>
@@ -77,7 +81,7 @@ builder.Services.RegisterAllDependencies(builder.Configuration);
 
 var app = builder.Build();
 
-// Middleware do Swagger
+app.UseErrorHandlerMiddleware();
 app.UseAuthentication();
 app.UseSwagger();
 app.UseSwaggerUI(options =>

@@ -1,4 +1,5 @@
 ﻿using ChartOfAccounts.Domain.Entities;
+using ChartOfAccounts.Domain.Exceptions;
 using ChartOfAccounts.Domain.Interfaces;
 using ChartOfAccounts.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -8,66 +9,109 @@ namespace ChartOfAccounts.Infrastructure.Repositories;
 public class ChartOfAccountsRepository : IChartOfAccountsRepository
 {
     private readonly AppDbContext _context;
+    private readonly string _requestIdentifier;
 
     public ChartOfAccountsRepository(AppDbContext context)
     {
         _context = context;
+        _requestIdentifier = Guid.NewGuid().ToString();
     }
 
     public async Task<(List<ChartOfAccount> Items, int TotalCount)> GetPagedAsync(int page, int pageSize)
     {
-        IQueryable<ChartOfAccount> query = _context.ChartOfAccounts.OrderBy(x => x.CodeNormalized);
+        try
+        {
+            IQueryable<ChartOfAccount> query = _context.ChartOfAccounts.OrderBy(x => x.CodeNormalized);
 
-        int totalCount = await query.CountAsync();
+            int totalCount = await query.CountAsync();
 
-        List<ChartOfAccount> items = await query
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+            List<ChartOfAccount> items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
-        return (items, totalCount);
+            return (items, totalCount);
+        }
+        catch (Exception ex)
+        {
+            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestIdentifier);
+        }
     }
-
 
     public async Task<ChartOfAccount?> GetByCodeAsync(string code)
     {
-        return await _context.Set<ChartOfAccount>()
-            .FirstOrDefaultAsync(x => x.Code == code);
+        try
+        {
+            return await _context.Set<ChartOfAccount>()
+                .FirstOrDefaultAsync(x => x.Code == code);
+        }
+        catch (Exception ex)
+        {
+            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestIdentifier);
+        }
     }
 
     public async Task<bool?> IsPostableAsync(string code)
     {
-        bool? isPostable = await _context.ChartOfAccounts
-            .Where(c => c.Code == code)
-            .Select(c => (bool?)c.IsPostable)
-            .FirstOrDefaultAsync();
+        try
+        {
+            bool? isPostable = await _context.ChartOfAccounts
+                .Where(c => c.Code == code)
+                .Select(c => (bool?)c.IsPostable)
+                .FirstOrDefaultAsync();
 
-        return isPostable;
+            return isPostable;
+        }
+        catch (Exception ex)
+        {
+            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestIdentifier);
+        }
     }
 
     public async Task AddAsync(ChartOfAccount account)
     {
-        _context.ChartOfAccounts.Add(account);
-        await _context.SaveChangesAsync();
+        try
+        {
+            _context.ChartOfAccounts.Add(account);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestIdentifier);
+        }
     }
 
     public async Task DeleteAsync(string code)
     {
-        var entity = await GetByCodeAsync(code);
-        if (entity != null)
+        try
         {
-            _context.ChartOfAccounts.Remove(entity);
-            await _context.SaveChangesAsync();
+            ChartOfAccount? entity = await GetByCodeAsync(code);
+            if (entity != null)
+            {
+                _context.ChartOfAccounts.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestIdentifier);
         }
     }
 
     public async Task<List<string>> GetChildrenCodesAsync(string parentCode)
     {
-        return await _context
-            .Set<ChartOfAccount>()
-            .Where(c => c.Code.StartsWith(parentCode + "."))
-            .Select(c => c.Code)
-            .ToListAsync();
+        try
+        {
+            return await _context
+                .Set<ChartOfAccount>()
+                .Where(c => c.Code.StartsWith(parentCode + "."))
+                .Select(c => c.Code)
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestIdentifier);
+        }
     }
 
 }
