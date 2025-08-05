@@ -2,7 +2,7 @@
 
 namespace ChartOfAccounts.Application.DTOs;
 
-public class ChartOfAccountCreateDto
+public record ChartOfAccountCreateDto
 {
     [Required]
     public string Code { get; set; } = default!;
