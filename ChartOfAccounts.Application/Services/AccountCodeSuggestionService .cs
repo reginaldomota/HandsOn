@@ -16,61 +16,56 @@ public class AccountCodeSuggestionService : IAccountCodeSuggestionService
 
     public async Task<string?> SuggestNextCodeAsync(string parentCode)
     {
-        return await FindNextCodeRecursiveAsync(parentCode, 1);
+        var parentLevel = parentCode.Split('.').Length;
+        return await SuggestNextCodeRecursiveAsync(parentCode, parentLevel);
     }
 
-    private async Task<string?> FindNextCodeRecursiveAsync(string parentCode, int level)
+    private async Task<string?> SuggestNextCodeRecursiveAsync(string currentCode, int level)
     {
-        if (level > MaxLevel)
-            return null; // proteção contra recursão infinita
-
-        var childrenCodes = await _repository.GetChildrenCodesAsync(parentCode);
-
-        // Pega todos os sufixos numéricos diretos (ex: "1.2.5" → 5)
-        var childNumbers = childrenCodes
-            .Select(code => GetChildSuffixNumber(parentCode, code))
-            .Where(n => n != null)
-            .Select(n => n!.Value)
-            .ToList();
-
-        var nextNumber = childNumbers.Any() ? childNumbers.Max() + 1 : 1;
-
-        if (nextNumber <= MaxChildren)
-        {
-            return $"{parentCode}.{nextNumber}";
-        }
-
-        // Limite atingido, tentar recursivamente em um novo parent
-        var newParent = GetNewParentCode(parentCode);
-        if (newParent == null)
+        if (level >= MaxLevel)
             return null;
 
-        return await FindNextCodeRecursiveAsync(newParent, level + 1);
+        // Tenta sugerir o próximo filho direto
+        var childCodes = await _repository.GetChildrenCodesAsync(currentCode);
+        var nextChild = GetNextSuffix(childCodes, currentCode);
+
+        if (nextChild <= MaxChildren)
+            return $"{currentCode}.{nextChild}";
+
+        // Se excedeu o limite, sobe um nível e tenta sugerir novo irmão
+        var parentCode = GetParentCode(currentCode);
+        if (parentCode == null)
+            return null;
+
+        var parentLevel = parentCode.Split('.').Length;
+        return await SuggestNextCodeRecursiveAsync(parentCode, parentLevel);
+    }
+
+    private int GetNextSuffix(IEnumerable<string> codes, string baseCode)
+    {
+        return codes
+            .Select(code => GetChildSuffixNumber(baseCode, code))
+            .Where(n => n != null)
+            .Select(n => n!.Value)
+            .DefaultIfEmpty(0)
+            .Max() + 1;
+    }
+
+    private string? GetParentCode(string code)
+    {
+        var parts = code.Split('.');
+        return parts.Length > 1
+            ? string.Join('.', parts.Take(parts.Length - 1))
+            : null;
     }
 
     private int? GetChildSuffixNumber(string parentCode, string childCode)
     {
         if (!childCode.StartsWith(parentCode + ".")) return null;
 
-        var suffix = childCode.Substring(parentCode.Length + 1); // remove prefixo + ponto
-        var nextPart = suffix.Split('.').First(); // só a parte imediatamente abaixo
+        var suffix = childCode.Substring(parentCode.Length + 1);
+        var nextPart = suffix.Split('.').First();
 
         return int.TryParse(nextPart, out int value) ? value : null;
-    }
-
-    private string? GetNewParentCode(string currentCode)
-    {
-        var parts = currentCode.Split('.').ToList();
-
-        for (int i = parts.Count - 1; i >= 0; i--)
-        {
-            if (int.TryParse(parts[i], out int number) && number < MaxChildren)
-            {
-                parts[i] = (number + 1).ToString();
-                return string.Join('.', parts.Take(i + 1));
-            }
-        }
-
-        return null;
     }
 }
