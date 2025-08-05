@@ -1,4 +1,4 @@
-﻿namespace ChartOfAccounts.Api.Middlewares;
+﻿namespace ChartOfAccounts.Api.Middlewares.Extensions;
 
 public static class ErrorHandlerMiddlewareExtensions
 {

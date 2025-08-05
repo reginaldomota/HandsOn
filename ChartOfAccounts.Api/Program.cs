@@ -1,4 +1,4 @@
-﻿using ChartOfAccounts.Api.Middlewares;
+﻿using ChartOfAccounts.Api.Middlewares.Extensions;
 using ChartOfAccounts.CrossCutting.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -81,8 +81,11 @@ builder.Services.RegisterAllDependencies(builder.Configuration);
 
 var app = builder.Build();
 
-app.UseErrorHandlerMiddleware();
 app.UseAuthentication();
+
+app.UseErrorHandlerMiddleware();
+app.UseTenantContextMiddleware();
+
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
