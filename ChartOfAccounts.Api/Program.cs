@@ -1,5 +1,7 @@
 ﻿using ChartOfAccounts.CrossCutting.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,11 +55,30 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "ChartOfAccounts.Auth",
+            ValidAudience = "ChartOfAccounts.ApiClients",
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes("d8afacb3-bf57-45ae-a6c3-174e8422ee78"))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 builder.Services.RegisterAllDependencies(builder.Configuration);
 
 var app = builder.Build();
 
 // Middleware do Swagger
+app.UseAuthentication();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {

@@ -1,4 +1,5 @@
 ﻿using ChartOfAccounts.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChartOfAccounts.Api.Controllers.v1;
@@ -7,6 +8,7 @@ namespace ChartOfAccounts.Api.Controllers.v1;
 [ApiExplorerSettings(GroupName = "v1")]
 [Route("api/v1/accounts/suggestion")]
 [Tags("Plano de Contas")]
+[Authorize]
 public class AccountCodeSuggestionController : ControllerBase
 {
     private readonly IAccountCodeSuggestionService _suggestionService;

@@ -4,6 +4,7 @@ using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Application.Mappers;
 using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChartOfAccounts.Api.Controllers.v1;
@@ -12,6 +13,7 @@ namespace ChartOfAccounts.Api.Controllers.v1;
 [ApiExplorerSettings(GroupName = "v1")]
 [Route("api/v1/accounts")]
 [Tags("Plano de Contas")]
+[Authorize]
 public class AccountsController : ControllerBase
 {
 
