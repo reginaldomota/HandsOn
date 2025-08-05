@@ -1,4 +1,4 @@
-﻿using ChartOfAccounts.Application.DTOs;
+﻿using ChartOfAccounts.Application.DTOs.ChartOfAccounts;
 using ChartOfAccounts.Application.Helpers;
 using ChartOfAccounts.Domain.Entities;
 

@@ -1,4 +1,5 @@
 ﻿using ChartOfAccounts.Application.DTOs;
+using ChartOfAccounts.Application.DTOs.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

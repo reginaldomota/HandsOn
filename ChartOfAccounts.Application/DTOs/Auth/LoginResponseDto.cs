@@ -1,4 +1,4 @@
-﻿namespace ChartOfAccounts.Application.DTOs;
+﻿namespace ChartOfAccounts.Application.DTOs.Auth;
 
 public record LoginResponseDto
 {

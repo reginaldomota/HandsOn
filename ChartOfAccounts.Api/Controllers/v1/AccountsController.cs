@@ -1,8 +1,7 @@
-﻿using ChartOfAccounts.Application.DTOs;
+﻿using ChartOfAccounts.Application.DTOs.ChartOfAccounts;
+using ChartOfAccounts.Application.DTOs.Common;
 using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Application.Mappers;
-using ChartOfAccounts.Application.Models.Common;
-using ChartOfAccounts.Application.Responses;
 using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -24,18 +23,18 @@ public class AccountsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<PaginatedResult<ChartOfAccountResponse>>> GetAll(
+    public async Task<ActionResult<PaginatedResultDto<ChartOfAccountResponseDto>>> GetAll(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20)
     {
         var paged = await _service.GetPagedAsync(page, pageSize);
 
-        var response = new PaginatedResult<ChartOfAccountResponse>
+        var response = new PaginatedResultDto<ChartOfAccountResponseDto>
         {
             Page = paged.Page,
             PageSize = paged.PageSize,
             TotalCount = paged.TotalCount,
-            Items = paged.Items.Select(a => new ChartOfAccountResponse(a))
+            Items = paged.Items.Select(a => new ChartOfAccountResponseDto(a))
         };
 
         return Ok(response);
@@ -43,14 +42,14 @@ public class AccountsController : ControllerBase
 
 
     [HttpGet("{code}")]
-    public async Task<ActionResult<ChartOfAccountResponse>> GetByCode(string code)
+    public async Task<ActionResult<ChartOfAccountResponseDto>> GetByCode(string code)
     {
         ChartOfAccount? account = await _service.GetByCodeAsync(code);
 
         if (account == null)
             return NotFound();
 
-        return Ok(new ChartOfAccountResponse(account));
+        return Ok(new ChartOfAccountResponseDto(account));
     }
 
     [HttpPost]
@@ -60,7 +59,7 @@ public class AccountsController : ControllerBase
 
         await _service.AddAsync(account);
 
-        return CreatedAtAction(nameof(GetByCode), new { code = account.Code }, new ChartOfAccountResponse(account));
+        return CreatedAtAction(nameof(GetByCode), new { code = account.Code }, new ChartOfAccountResponseDto(account));
     }
 
     [HttpDelete("{code}")]

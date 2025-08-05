@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ChartOfAccounts.Application.DTOs;
+namespace ChartOfAccounts.Application.DTOs.ChartOfAccounts;
 
 public record ChartOfAccountCreateDto
 {

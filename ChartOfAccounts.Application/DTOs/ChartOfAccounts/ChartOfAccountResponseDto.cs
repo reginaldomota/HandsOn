@@ -1,10 +1,10 @@
 ﻿using ChartOfAccounts.Domain.Entities;
 
-namespace ChartOfAccounts.Application.Responses;
+namespace ChartOfAccounts.Application.DTOs.ChartOfAccounts;
 
-public class ChartOfAccountResponse
+public class ChartOfAccountResponseDto
 {
-    public ChartOfAccountResponse(ChartOfAccount entity)
+    public ChartOfAccountResponseDto(ChartOfAccount entity)
     {
         Code = entity.Code;
         Name = entity.Name;
