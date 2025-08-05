@@ -1,4 +1,5 @@
-﻿using ChartOfAccounts.Domain.Entities;
+﻿using ChartOfAccounts.CrossCutting.Context.Interfaces;
+using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Exceptions;
 using ChartOfAccounts.Domain.Interfaces;
 using ChartOfAccounts.Infrastructure.Data;
@@ -9,12 +10,12 @@ namespace ChartOfAccounts.Infrastructure.Repositories;
 public class ChartOfAccountsRepository : IChartOfAccountsRepository
 {
     private readonly AppDbContext _context;
-    private readonly string _requestIdentifier;
+    private readonly IRequestContext _requestContext;
 
-    public ChartOfAccountsRepository(AppDbContext context)
+    public ChartOfAccountsRepository(AppDbContext context, IRequestContext requestContext)
     {
         _context = context;
-        _requestIdentifier = Guid.NewGuid().ToString();
+        _requestContext = requestContext;
     }
 
     public async Task<(List<ChartOfAccount> Items, int TotalCount)> GetPagedAsync(int page, int pageSize)
@@ -34,7 +35,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
         catch (Exception ex)
         {
-            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestIdentifier);
+            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestContext.RequestIdentifier);
         }
     }
 
@@ -47,7 +48,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
         catch (Exception ex)
         {
-            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestIdentifier);
+            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestContext.RequestIdentifier);
         }
     }
 
@@ -64,7 +65,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
         catch (Exception ex)
         {
-            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestIdentifier);
+            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestContext.RequestIdentifier);
         }
     }
 
@@ -77,7 +78,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
         catch (Exception ex)
         {
-            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestIdentifier);
+            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestContext.RequestIdentifier);
         }
     }
 
@@ -94,7 +95,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
         catch (Exception ex)
         {
-            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestIdentifier);
+            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestContext.RequestIdentifier);
         }
     }
 
@@ -110,7 +111,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
         catch (Exception ex)
         {
-            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestIdentifier);
+            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex, _requestContext.RequestIdentifier);
         }
     }
 

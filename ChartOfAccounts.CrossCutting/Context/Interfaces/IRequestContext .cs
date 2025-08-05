@@ -1,0 +1,7 @@
+﻿namespace ChartOfAccounts.CrossCutting.Context.Interfaces;
+
+public interface IRequestContext
+{
+    string? TenantId { get; }
+    string RequestIdentifier { get; }
+}

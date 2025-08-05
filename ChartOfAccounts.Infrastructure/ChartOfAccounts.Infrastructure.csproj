@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChartOfAccounts.Application\ChartOfAccounts.Application.csproj" />
+    <ProjectReference Include="..\ChartOfAccounts.CrossCutting\ChartOfAccounts.CrossCutting.csproj" />
   </ItemGroup>
 
 </Project>

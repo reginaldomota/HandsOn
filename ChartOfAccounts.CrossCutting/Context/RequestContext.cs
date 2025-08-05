@@ -1,19 +1,15 @@
-﻿namespace ChartOfAccounts.CrossCutting.Context;
+﻿using ChartOfAccounts.CrossCutting.Context.Interfaces;
 
-public static class RequestContext
+namespace ChartOfAccounts.CrossCutting.Context;
+
+public class RequestContext : IRequestContext
 {
     private static readonly AsyncLocal<string?> _tenantId = new();
-    private static readonly AsyncLocal<string?> _requestId = new();
+    private static readonly AsyncLocal<string?> _requestIdentifier = new();
 
-    public static string? TenantId
-    {
-        get => _tenantId.Value;
-        set => _tenantId.Value = value;
-    }
+    public string? TenantId => _tenantId.Value;
+    public string RequestIdentifier => _requestIdentifier.Value ?? Guid.NewGuid().ToString();
 
-    public static string? RequestId
-    {
-        get => _requestId.Value;
-        set => _requestId.Value = value;
-    }
+    public static void SetTenant(string tenantId) => _tenantId.Value = tenantId;
+    public static void SetRequestIdentifier(string requestId) => _requestIdentifier.Value = requestId;
 }

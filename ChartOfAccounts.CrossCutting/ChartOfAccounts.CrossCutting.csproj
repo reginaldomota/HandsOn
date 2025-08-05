@@ -15,7 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ChartOfAccounts.Application\ChartOfAccounts.Application.csproj" />
     <ProjectReference Include="..\ChartOfAccounts.Domain\ChartOfAccounts.Domain.csproj" />
-    <ProjectReference Include="..\ChartOfAccounts.Infrastructure\ChartOfAccounts.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

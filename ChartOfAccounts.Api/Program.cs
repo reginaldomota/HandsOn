@@ -1,5 +1,5 @@
-﻿using ChartOfAccounts.Api.Middlewares.Extensions;
-using ChartOfAccounts.CrossCutting.DependencyInjection;
+﻿using ChartOfAccounts.Api.Config.DependencyInjection;
+using ChartOfAccounts.Api.Middlewares.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;

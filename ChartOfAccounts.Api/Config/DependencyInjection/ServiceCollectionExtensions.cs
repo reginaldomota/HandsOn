@@ -1,13 +1,13 @@
 ﻿using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Application.Services;
+using ChartOfAccounts.CrossCutting.Context;
+using ChartOfAccounts.CrossCutting.Context.Interfaces;
 using ChartOfAccounts.Domain.Interfaces;
 using ChartOfAccounts.Infrastructure.Data;
 using ChartOfAccounts.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace ChartOfAccounts.CrossCutting.DependencyInjection;
+namespace ChartOfAccounts.Api.Config.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
@@ -21,6 +21,12 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDomainServices(this IServiceCollection services)
     {
         // Caso você tenha serviços de domínio com regras específicas, adicione aqui.
+        return services;
+    }
+
+    public static IServiceCollection AddCrossCuttingServices(this IServiceCollection services)
+    {
+        services.AddScoped<IRequestContext, RequestContext>();
         return services;
     }
 
@@ -41,6 +47,7 @@ public static class ServiceCollectionExtensions
         services
             .AddApplicationServices()
             .AddDomainServices()
+            .AddCrossCuttingServices()
             .AddInfrastructureServices(configuration);
 
         return services;
