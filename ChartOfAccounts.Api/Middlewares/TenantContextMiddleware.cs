@@ -16,7 +16,7 @@ public class TenantContextMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        string? requestId = context.TraceIdentifier;
+        string? requestId = RequestIdentifierGenerator.Generate();
         RequestContext.SetRequestIdentifier(requestId);
 
         // TenantId extraído do JWT

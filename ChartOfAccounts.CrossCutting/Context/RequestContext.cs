@@ -8,7 +8,7 @@ public class RequestContext : IRequestContext
     private static readonly AsyncLocal<string?> _requestIdentifier = new();
 
     public string? TenantId => _tenantId.Value;
-    public string RequestIdentifier => _requestIdentifier.Value ?? Guid.NewGuid().ToString();
+    public string RequestIdentifier => _requestIdentifier.Value ?? RequestIdentifierGenerator.Generate();
 
     public static void SetTenant(string tenantId) => _tenantId.Value = tenantId;
     public static void SetRequestIdentifier(string requestId) => _requestIdentifier.Value = requestId;
