@@ -25,7 +25,7 @@ public class AuthController : ControllerBase
         ["tenant_3"] = ("123", "44e0a5cf-8cf6-4b78-b49d-abc1df098118")
     };
 
-    [HttpPost("login")]
+    [HttpPost("token")]
     public IActionResult Login([FromBody] LoginRequestDto login)
     {
         if (!_users.TryGetValue(login.Username, out var userInfo)
