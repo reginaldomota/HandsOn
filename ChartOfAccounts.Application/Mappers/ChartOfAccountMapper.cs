@@ -11,7 +11,6 @@ public static class ChartOfAccountMapper
         {
             Code = model.Code,
             Name = model.Name,
-            Description = model.Description,
             Type = model.Type,
             IsPostable = model.IsPostable,
             CreatedAt = DateTime.UtcNow,

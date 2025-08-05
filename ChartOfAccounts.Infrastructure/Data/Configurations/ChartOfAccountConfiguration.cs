@@ -23,9 +23,6 @@ public class ChartOfAccountConfiguration : IEntityTypeConfiguration<ChartOfAccou
                .IsRequired()
                .HasMaxLength(255);
 
-        builder.Property(x => x.Description)
-               .HasColumnType("text");
-
         builder.Property(x => x.Type)
                .IsRequired()
                .HasMaxLength(50);

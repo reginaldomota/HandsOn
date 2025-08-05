@@ -8,7 +8,6 @@ public class ChartOfAccountResponse
     {
         Code = entity.Code;
         Name = entity.Name;
-        Description = entity.Description;
         Type = entity.Type;
         IsPostable = entity.IsPostable;
         ParentCode = entity.ParentCode;
