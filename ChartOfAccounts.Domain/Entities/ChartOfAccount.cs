@@ -11,6 +11,7 @@ public class ChartOfAccount
     public string? ParentCode { get; set; }
     public int Level { get; private set; }
     public bool CanHaveChildren => !IsPostable;
+    public string CodeNormalized { get; set; } = default!;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

@@ -21,7 +21,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
 
     public async Task<(List<ChartOfAccount> Items, int TotalCount)> GetPagedAsync(int page, int pageSize)
     {
-        IQueryable<ChartOfAccount> query = _context.ChartOfAccounts.OrderBy(x => x.Code);
+        IQueryable<ChartOfAccount> query = _context.ChartOfAccounts.OrderBy(x => x.CodeNormalized);
 
         int totalCount = await query.CountAsync();
 
