@@ -1,4 +1,5 @@
 ﻿using ChartOfAccounts.Application.Interfaces;
+using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Interfaces;
 
 namespace ChartOfAccounts.Application.Services;
@@ -16,6 +17,14 @@ public class AccountCodeSuggestionService : IAccountCodeSuggestionService
 
     public async Task<string?> SuggestNextCodeAsync(string parentCode)
     {
+        bool? isPostable = await _repository.IsPostableAsync(parentCode);
+        
+        if (isPostable is null)
+            throw new InvalidOperationException($"O código {parentCode} não existe ou não é um código pai válido."); //todo criar excessao customizada e consumir no middleware. criar resource
+
+        if (isPostable == true)
+            throw new InvalidOperationException($"O código {parentCode} não aceita contas filhas pois ele permite lançamentos."); //todo criar excessao customizada e consumir no middleware
+
         var parentLevel = parentCode.Split('.').Length;
         return await SuggestNextCodeRecursiveAsync(parentCode, parentLevel);
     }
@@ -25,14 +34,12 @@ public class AccountCodeSuggestionService : IAccountCodeSuggestionService
         if (level >= MaxLevel)
             return null;
 
-        // Tenta sugerir o próximo filho direto
         var childCodes = await _repository.GetChildrenCodesAsync(currentCode);
         var nextChild = GetNextSuffix(childCodes, currentCode);
 
         if (nextChild <= MaxChildren)
             return $"{currentCode}.{nextChild}";
 
-        // Se excedeu o limite, sobe um nível e tenta sugerir novo irmão
         var parentCode = GetParentCode(currentCode);
         if (parentCode == null)
             return null;

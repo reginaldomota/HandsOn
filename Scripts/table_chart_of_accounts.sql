@@ -13,8 +13,10 @@ CREATE TABLE "ChartOfAccounts" (
     "UpdatedAt" TIMESTAMP DEFAULT now()
 );
 
-CREATE INDEX idx_chartofaccounts_code ON "ChartOfAccounts"("Code");
-CREATE INDEX idx_chartofaccounts_parentcode ON "ChartOfAccounts"("ParentCode");
+CREATE INDEX idx_chartofaccounts_code           ON "ChartOfAccounts"("Code");
+CREATE INDEX idx_chartofaccounts_parentcode     ON "ChartOfAccounts"("ParentCode");
 CREATE INDEX idx_chartofaccounts_codenormalized ON "ChartOfAccounts"("CodeNormalized");
-CREATE INDEX idx_chartofaccounts_type ON "ChartOfAccounts"("Type");
+CREATE INDEX idx_chartofaccounts_type           ON "ChartOfAccounts"("Type");
+CREATE INDEX idx_chartofaccounts_ispostable     ON "ChartOfAccounts"("IsPostable");
+
 

@@ -19,7 +19,7 @@ public class AccountCodeSuggestionController : ControllerBase
     [HttpGet("{parentCode}")]
     public async Task<ActionResult<string>> SuggestNextCode(string parentCode)
     {
-        string suggestion = await _suggestionService.SuggestNextCodeAsync(parentCode);
+        string? suggestion = await _suggestionService.SuggestNextCodeAsync(parentCode);
 
         if (string.IsNullOrWhiteSpace(suggestion))
             return NotFound("Não foi possível sugerir um próximo código.");

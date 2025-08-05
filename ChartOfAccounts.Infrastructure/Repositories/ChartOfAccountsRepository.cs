@@ -35,6 +35,15 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
             .FirstOrDefaultAsync(x => x.Code == code);
     }
 
+    public async Task<bool?> IsPostableAsync(string code)
+    {
+        bool? isPostable = await _context.ChartOfAccounts
+            .Where(c => c.Code == code)
+            .Select(c => (bool?)c.IsPostable)
+            .FirstOrDefaultAsync();
+
+        return isPostable;
+    }
 
     public async Task AddAsync(ChartOfAccount account)
     {
