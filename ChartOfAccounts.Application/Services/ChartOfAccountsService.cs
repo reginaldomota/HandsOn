@@ -1,4 +1,5 @@
 ﻿using ChartOfAccounts.Application.Interfaces;
+using ChartOfAccounts.Application.Models.Common;
 using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Interfaces;
 
@@ -13,7 +14,18 @@ public class ChartOfAccountsService : IChartOfAccountsService
         _repository = repository;
     }
 
-    public Task<IEnumerable<ChartOfAccount>> GetAllAsync() => _repository.GetAllAsync();
+    public async Task<PaginatedResult<ChartOfAccount>> GetPagedAsync(int page, int pageSize)
+    {
+        var (items, totalCount) = await _repository.GetPagedAsync(page, pageSize);
+
+        return new PaginatedResult<ChartOfAccount>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        };
+    }
 
     public Task<ChartOfAccount?> GetByCodeAsync(string code) => _repository.GetByCodeAsync(code);
 

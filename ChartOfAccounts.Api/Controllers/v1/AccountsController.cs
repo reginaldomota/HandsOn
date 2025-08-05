@@ -1,6 +1,7 @@
 ﻿using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Application.Mappers;
 using ChartOfAccounts.Application.Models;
+using ChartOfAccounts.Application.Models.Common;
 using ChartOfAccounts.Application.Responses;
 using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Interfaces;
@@ -23,16 +24,23 @@ public class AccountsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ChartOfAccountResponse>>> GetAll()
+    public async Task<ActionResult<PaginatedResult<ChartOfAccountResponse>>> GetAll(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20)
     {
-        IEnumerable<ChartOfAccount> accounts = await _service.GetAllAsync();
+        var paged = await _service.GetPagedAsync(page, pageSize);
 
-        List<ChartOfAccountResponse> response = accounts
-            .Select(account => new ChartOfAccountResponse(account))
-            .ToList();
+        var response = new PaginatedResult<ChartOfAccountResponse>
+        {
+            Page = paged.Page,
+            PageSize = paged.PageSize,
+            TotalCount = paged.TotalCount,
+            Items = paged.Items.Select(a => new ChartOfAccountResponse(a))
+        };
 
         return Ok(response);
     }
+
 
     [HttpGet("{code}")]
     public async Task<ActionResult<ChartOfAccountResponse>> GetByCode(string code)
