@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ChartOfAccounts.CrossCutting\ChartOfAccounts.CrossCutting.csproj" />
     <ProjectReference Include="..\ChartOfAccounts.Domain\ChartOfAccounts.Domain.csproj" />
   </ItemGroup>
 

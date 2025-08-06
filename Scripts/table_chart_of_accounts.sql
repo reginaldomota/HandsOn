@@ -1,5 +1,6 @@
 CREATE TABLE "ChartOfAccounts" (
     "Id" SERIAL PRIMARY KEY,
+    "IdempotencyKey" UUID UNIQUE,
     "Code" VARCHAR(25) NOT NULL UNIQUE,
     "Name" VARCHAR(255) NOT NULL,
     "CodeNormalized" VARCHAR(25),
@@ -9,6 +10,8 @@ CREATE TABLE "ChartOfAccounts" (
     "Level" INTEGER GENERATED ALWAYS AS (
         array_length(string_to_array("Code", '.'), 1)
     ) STORED,
+    "RequestId" VARCHAR(32),
+    "TenantId" UUID,
     "CreatedAt" TIMESTAMP DEFAULT now(),
     "UpdatedAt" TIMESTAMP DEFAULT now()
 );
@@ -18,5 +21,4 @@ CREATE INDEX idx_chartofaccounts_parentcode     ON "ChartOfAccounts"("ParentCode
 CREATE INDEX idx_chartofaccounts_codenormalized ON "ChartOfAccounts"("CodeNormalized");
 CREATE INDEX idx_chartofaccounts_type           ON "ChartOfAccounts"("Type");
 CREATE INDEX idx_chartofaccounts_ispostable     ON "ChartOfAccounts"("IsPostable");
-
-
+CREATE INDEX idx_chartofaccounts_tenantid       ON "ChartOfAccounts"("TenantId");

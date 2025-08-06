@@ -2,8 +2,11 @@
 using ChartOfAccounts.Application.Helpers;
 using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Domain.Entities;
+using ChartOfAccounts.Domain.Enums;
 using ChartOfAccounts.Domain.Exceptions;
 using ChartOfAccounts.Domain.Interfaces;
+using ChartOfAccounts.Domain.Services;
+using System.Net;
 
 namespace ChartOfAccounts.Application.Services;
 
@@ -49,8 +52,20 @@ public class ChartOfAccountsService : IChartOfAccountsService
         {
             ChartOfAccount? chekAccount = await _repository.GetByCodeAsync(account.Code);
 
+            if (chekAccount != null && 
+                chekAccount.IdempotencyKey == account.IdempotencyKey && 
+                ContentHashGenerator.ComputeFor(account) == ContentHashGenerator.ComputeFor(chekAccount))
+                return;
+
             if (chekAccount != null)
                 throw new BusinessRuleValidationException($"O código {account.Code} já existe.", ex);
+
+            chekAccount = await _repository.GetByIdempotencyKeyAsync(account.IdempotencyKey);
+
+            if (chekAccount != null)
+                throw new ErrorHttpRequestException($"houve um conflito entre a nova tentativa e o estado previamente registrado para o Idempotency-Key {account.IdempotencyKey}", ex, (int)HttpStatusCode.Conflict, ErrorCode.Conflict);
+
+            throw new ErrorHttpRequestException(ex.Message, ex, ex.StatusCode, ex.ErrorCode);
         }
     }
 

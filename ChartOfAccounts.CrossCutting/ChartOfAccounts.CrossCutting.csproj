@@ -12,9 +12,4 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ChartOfAccounts.Application\ChartOfAccounts.Application.csproj" />
-    <ProjectReference Include="..\ChartOfAccounts.Domain\ChartOfAccounts.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

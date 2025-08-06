@@ -16,6 +16,7 @@ public class ChartOfAccountConfiguration : IEntityTypeConfiguration<ChartOfAccou
         builder.HasIndex(x => x.CodeNormalized);
         builder.HasIndex(x => x.Type);
         builder.HasIndex(x => x.ParentCode);
+        builder.HasIndex(x => x.TenantId); 
 
         builder.Property(x => x.Code)
                .IsRequired()
@@ -46,6 +47,16 @@ public class ChartOfAccountConfiguration : IEntityTypeConfiguration<ChartOfAccou
                .IsRequired();
 
         builder.Property(x => x.UpdatedAt)
+               .IsRequired();
+
+        builder.Property(x => x.IdempotencyKey)
+               .IsRequired();
+
+        builder.Property(x => x.RequestId)
+               .IsRequired()
+               .HasMaxLength(32);
+
+        builder.Property(x => x.TenantId)
                .IsRequired();
     }
 }

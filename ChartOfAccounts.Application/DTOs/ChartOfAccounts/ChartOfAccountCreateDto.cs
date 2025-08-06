@@ -10,8 +10,6 @@ public record ChartOfAccountCreateDto
     [Required]
     public string Name { get; set; } = default!;
 
-    public string? Description { get; set; }
-
     [Required]
     public string Type { get; set; } = default!;
 

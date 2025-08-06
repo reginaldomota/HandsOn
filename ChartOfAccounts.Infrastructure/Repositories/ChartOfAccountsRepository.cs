@@ -53,6 +53,19 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
     }
 
+    public async Task<ChartOfAccount?> GetByIdempotencyKeyAsync(Guid idempotencyKey)
+    {
+        try
+        {
+            return await _context.Set<ChartOfAccount>()
+                .FirstOrDefaultAsync(x => x.IdempotencyKey == idempotencyKey);
+        }
+        catch (Exception ex)
+        {
+            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex);
+        }
+    }
+
     public async Task<bool?> IsPostableAsync(string code)
     {
         try

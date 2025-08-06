@@ -1,12 +1,14 @@
 ﻿using ChartOfAccounts.Application.DTOs.ChartOfAccounts;
 using ChartOfAccounts.Application.Helpers;
+using ChartOfAccounts.Application.Interfaces;
+using ChartOfAccounts.CrossCutting.Context.Interfaces;
 using ChartOfAccounts.Domain.Entities;
 
-namespace ChartOfAccounts.Application.Mappers;
+namespace ChartOfAccounts.Application.Factories;
 
-public static class ChartOfAccountMapper
+public class ChartOfAccountFactory : IChartOfAccountFactory
 {
-    public static ChartOfAccount ToEntity(this ChartOfAccountCreateDto model)
+    public ChartOfAccount Create(ChartOfAccountCreateDto model, IRequestContext context)
     {
         return new ChartOfAccount
         {
@@ -17,7 +19,10 @@ public static class ChartOfAccountMapper
             CodeNormalized = CodeNormalizer.Normalize(model.Code),
             ParentCode = ParentCode.GetParentCode(model.Code),
             CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            UpdatedAt = DateTime.UtcNow,
+            IdempotencyKey = context.IdempotencyKey!.Value,
+            RequestId = context.RequestId,
+            TenantId = context.TenantId!.Value
         };
     }
 }

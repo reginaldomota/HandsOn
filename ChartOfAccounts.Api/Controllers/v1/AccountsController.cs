@@ -1,7 +1,7 @@
 ﻿using ChartOfAccounts.Application.DTOs.ChartOfAccounts;
 using ChartOfAccounts.Application.DTOs.Common;
 using ChartOfAccounts.Application.Interfaces;
-using ChartOfAccounts.Application.Mappers;
+using ChartOfAccounts.CrossCutting.Context.Interfaces;
 using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -18,10 +18,12 @@ public class AccountsController : ControllerBase
 {
 
     private readonly IChartOfAccountsService _service;
+    private readonly IRequestContext _requestContext;
 
-    public AccountsController(IChartOfAccountsService service)
+    public AccountsController(IChartOfAccountsService service, IRequestContext requestContext)
     {
         _service = service;
+        _requestContext = requestContext;
     }
 
     [HttpGet]
@@ -55,9 +57,9 @@ public class AccountsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] ChartOfAccountCreateDto model)
+    public async Task<IActionResult> Create([FromBody] ChartOfAccountCreateDto model, IChartOfAccountFactory chartOfAccount)
     {
-        ChartOfAccount account = model.ToEntity();
+        ChartOfAccount account = chartOfAccount.Create(model, _requestContext);
 
         await _service.CreateAsync(account);
 
