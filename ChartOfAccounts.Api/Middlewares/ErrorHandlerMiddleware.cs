@@ -1,7 +1,5 @@
 ﻿using ChartOfAccounts.Application.DTOs.Common;
-using ChartOfAccounts.Domain.Enums;
-using ChartOfAccounts.Domain.Exceptions;
-using System.Net;
+using ChartOfAccounts.Application.Errors.Interfaces;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -11,6 +9,7 @@ public class ErrorHandlerMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<ErrorHandlerMiddleware> _logger;
+    private readonly IErrorResponseFactory _errorResponseFactory;
 
     private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
     {
@@ -19,10 +18,14 @@ public class ErrorHandlerMiddleware
     };
 
 
-    public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
+    public ErrorHandlerMiddleware(
+        RequestDelegate next, 
+        ILogger<ErrorHandlerMiddleware> logger,
+        IErrorResponseFactory errorResponseFactory)
     {
         _next = next;
         _logger = logger;
+        _errorResponseFactory = errorResponseFactory;
     }
 
     public async Task Invoke(HttpContext context)
@@ -31,39 +34,13 @@ public class ErrorHandlerMiddleware
         {
             await _next(context);
         }
-        catch (ServiceUnavailableException ex)
-        {
-            _logger.LogWarning(ex, "Service unavailable: {Message}", ex.Message);
-
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = ex.StatusCode;
-
-            ErrorResponse response = new ErrorResponse
-            {
-                StatusCode = context.Response.StatusCode,
-                Message = ex.Message,
-                ErrorCode = ex.ErrorCode.ToString(),
-                RequestIdentifier = ex.RequestIdentifier
-            };
-            string json = JsonSerializer.Serialize(response, _jsonOptions);
-            await context.Response.WriteAsync(json);
-        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled exception: {Message}", ex.Message);
+            _logger.LogError(ex, "Exception handled: {Message}", ex.Message);
 
+            ErrorResponse response = _errorResponseFactory.Create(ex);
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-            ErrorResponse response = new ErrorResponse
-            {
-                StatusCode = context.Response.StatusCode,
-                ErrorCode = ErrorCode.InternalServerError.ToString(),
-                Message = "Ocorreu um erro inesperado.",
-#if DEBUG
-                Details = ex.ToString()
-#endif
-            };
+            context.Response.StatusCode = response.StatusCode;
 
             string json = JsonSerializer.Serialize(response, _jsonOptions);
             await context.Response.WriteAsync(json);

@@ -1,4 +1,8 @@
-﻿using ChartOfAccounts.Application.Interfaces;
+﻿using ChartOfAccounts.Application.Errors;
+using ChartOfAccounts.Application.Errors.Converters;
+using ChartOfAccounts.Application.Errors.Converters.Interfaces;
+using ChartOfAccounts.Application.Errors.Interfaces;
+using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Application.Services;
 using ChartOfAccounts.CrossCutting.Context;
 using ChartOfAccounts.CrossCutting.Context.Interfaces;
@@ -15,12 +19,18 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
         services.AddScoped<IAccountCodeSuggestionService, AccountCodeSuggestionService>();
+        services.AddSingleton<IErrorResponseFactory, ErrorResponseFactory>();
+
+        // Registra os conversores de erro
+        services.AddSingleton<IErrorResponseConverter, BusinessRuleValidationExceptionConverter>();
+        services.AddSingleton<IErrorResponseConverter, ServiceUnavailableExceptionConverter>();
+        services.AddSingleton<IErrorResponseConverter, DefaultExceptionConverter>();
+
         return services;
     }
 
     public static IServiceCollection AddDomainServices(this IServiceCollection services)
     {
-        // Caso você tenha serviços de domínio com regras específicas, adicione aqui.
         return services;
     }
 

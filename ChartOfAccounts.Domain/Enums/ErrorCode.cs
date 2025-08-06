@@ -17,6 +17,7 @@ public enum ErrorCode
     ValidationError = 200,
     RequiredFieldMissing = 201,
     InvalidFormat = 202,
+    BusinessRuleViolation = 203,
 
     // Dados
     NotFound = 300,
