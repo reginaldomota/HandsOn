@@ -2,6 +2,7 @@
 using ChartOfAccounts.Application.Errors.Converters;
 using ChartOfAccounts.Application.Errors.Converters.Interfaces;
 using ChartOfAccounts.Application.Errors.Interfaces;
+using ChartOfAccounts.Application.Factories;
 using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Application.Services;
 using ChartOfAccounts.CrossCutting.Context;
@@ -24,7 +25,11 @@ public static class ServiceCollectionExtensions
         // Registra os conversores de erro
         services.AddSingleton<IErrorResponseConverter, BusinessRuleValidationExceptionConverter>();
         services.AddSingleton<IErrorResponseConverter, ServiceUnavailableExceptionConverter>();
+        services.AddSingleton<IErrorResponseConverter, ErrorHttpRequestConverter>();
         services.AddSingleton<IErrorResponseConverter, DefaultExceptionConverter>();
+
+        // Factories
+        services.AddScoped<IChartOfAccountFactory, ChartOfAccountFactory>();
 
         return services;
     }

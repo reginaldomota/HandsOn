@@ -21,7 +21,7 @@ public class TenantContextMiddleware
             Claim? tenantClaim = context.User.FindFirst("tenant");
             if (tenantClaim != null)
             {
-                RequestContext.SetTenant(tenantClaim.Value);
+                RequestContext.SetTenant(Guid.Parse(tenantClaim.Value));
             }
         }
 

@@ -2,7 +2,7 @@
 
 public interface IRequestContext
 {
-    string? TenantId { get; }
+    Guid? TenantId { get; }
     string RequestId { get; }
-    string? IdempotencyKey { get; }
+    Guid? IdempotencyKey { get; }
 }

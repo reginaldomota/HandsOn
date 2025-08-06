@@ -1,5 +1,7 @@
 ﻿using ChartOfAccounts.CrossCutting.Context;
 using ChartOfAccounts.CrossCutting.Context.Interfaces;
+using ChartOfAccounts.Domain.Enums;
+using ChartOfAccounts.Domain.Exceptions;
 using System.Diagnostics;
 
 namespace ChartOfAccounts.Api.Middlewares;
@@ -21,7 +23,12 @@ public class RequestTrackingMiddleware
         RequestContext.SetRequestIdentifier(requestId);
 
         if (context.Request.Headers.TryGetValue("Idempotency-Key", out var idempotencyKeyHeader))
-            RequestContext.SetIdempotencyKey(idempotencyKeyHeader!);
+        {
+            if (!Guid.TryParse(idempotencyKeyHeader, out Guid idempotencyKeyGuid))
+                throw new ErrorHttpRequestException("Cabeçalho Header Idempotency-Key inválido. Deve ser um GUID válido no formato UUIDv4", StatusCodes.Status400BadRequest, ErrorCode.ValidationError);
+
+            RequestContext.SetIdempotencyKey(idempotencyKeyGuid);
+        }
 
         string? idempotencyKey = idempotencyKeyHeader;
 
