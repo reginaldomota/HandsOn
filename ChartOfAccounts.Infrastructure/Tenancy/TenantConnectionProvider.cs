@@ -1,5 +1,7 @@
 ﻿using ChartOfAccounts.CrossCutting.Tenancy.Interfaces;
+using ChartOfAccounts.Domain.Exceptions;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 
 namespace ChartOfAccounts.Infrastructure.Tenancy;
 
@@ -15,6 +17,6 @@ public class TenantConnectionProvider : ITenantConnectionProvider
     public string GetConnectionString(Guid tenantId)
     {
         return _configuration.GetConnectionString($"Tenant_{tenantId}")
-               ?? throw new InvalidOperationException($"Tenant '{tenantId}' não configurado.");
+               ?? throw new ErrorHttpRequestException($"Tenant '{tenantId}' não possui acesso ou não está configurado.", (int)HttpStatusCode.Forbidden, Domain.Enums.ErrorCode.Forbidden);
     }
 }
