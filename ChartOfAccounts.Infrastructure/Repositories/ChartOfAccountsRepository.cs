@@ -4,6 +4,7 @@ using ChartOfAccounts.Domain.Exceptions;
 using ChartOfAccounts.Domain.Interfaces;
 using ChartOfAccounts.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace ChartOfAccounts.Infrastructure.Repositories;
 
@@ -69,12 +70,16 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
     }
 
-    public async Task AddAsync(ChartOfAccount account)
+    public async Task CreateAsync(ChartOfAccount account)
     {
         try
         {
             _context.ChartOfAccounts.Add(account);
             await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == PostgresErrorCodes.UniqueViolation)
+        {
+            throw new DataIntegrityViolationException("Violação de Integridade de dados", ex);
         }
         catch (Exception ex)
         {

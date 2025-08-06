@@ -59,7 +59,7 @@ public class AccountsController : ControllerBase
     {
         ChartOfAccount account = model.ToEntity();
 
-        await _service.AddAsync(account);
+        await _service.CreateAsync(account);
 
         return CreatedAtAction(nameof(GetByCode), new { code = account.Code }, new ChartOfAccountResponseDto(account));
     }

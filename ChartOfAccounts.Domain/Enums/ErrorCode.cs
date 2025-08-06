@@ -20,6 +20,7 @@ public enum ErrorCode
     BusinessRuleViolation = 203,
 
     // Dados
+    DataIntegrityViolation,
     NotFound = 300,
     AlreadyExists = 301,
     Conflict = 302,

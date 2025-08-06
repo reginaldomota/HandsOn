@@ -31,17 +31,27 @@ public class ChartOfAccountsService : IChartOfAccountsService
 
     public Task<ChartOfAccount?> GetByCodeAsync(string code) => _repository.GetByCodeAsync(code);
 
-    public async Task AddAsync(ChartOfAccount account)
+    public async Task CreateAsync(ChartOfAccount account)
     {
-        bool? isPostable = await _repository.IsPostableAsync(account.ParentCode!);
+        try
+        {
+            bool? isPostable = await _repository.IsPostableAsync(account.ParentCode!);
 
-        if (isPostable is null)
-            throw new BusinessRuleValidationException($"O código {account.ParentCode!} não existe ou não é um código pai válido.");
+            if (isPostable is null)
+                throw new BusinessRuleValidationException($"O código {account.ParentCode!} não existe ou não é um código pai válido.");
 
-        if (isPostable == true)
-            throw new BusinessRuleValidationException($"O código {account.ParentCode!} não aceita contas filhas pois ele permite lançamentos.");
+            if (isPostable == true)
+                throw new BusinessRuleValidationException($"O código {account.ParentCode!} não aceita contas filhas pois ele permite lançamentos.");
 
-        await _repository.AddAsync(account);
+            await _repository.CreateAsync(account);
+        }
+        catch(DataIntegrityViolationException ex)
+        {
+            ChartOfAccount? chekAccount = await _repository.GetByCodeAsync(account.Code);
+
+            if (chekAccount != null)
+                throw new BusinessRuleValidationException($"O código {account.Code} já existe.", ex);
+        }
     }
 
     public Task DeleteAsync(string code) => _repository.DeleteAsync(code);
