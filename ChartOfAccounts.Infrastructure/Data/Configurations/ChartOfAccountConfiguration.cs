@@ -40,9 +40,6 @@ public class ChartOfAccountConfiguration : IEntityTypeConfiguration<ChartOfAccou
         builder.Property(x => x.ParentCode)
                .HasMaxLength(255);
 
-        builder.Property(x => x.Level)
-               .HasComputedColumnSql();
-
         builder.Property(x => x.CreatedAt)
                .IsRequired();
 

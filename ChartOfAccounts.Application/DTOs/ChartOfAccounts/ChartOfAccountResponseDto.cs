@@ -11,7 +11,6 @@ public class ChartOfAccountResponseDto
         Type = entity.Type;
         IsPostable = entity.IsPostable;
         ParentCode = entity.ParentCode;
-        Level = entity.Level;
     }
 
     public string Code { get; set; }
@@ -19,5 +18,4 @@ public class ChartOfAccountResponseDto
     public string Type { get; set; }
     public bool IsPostable { get; set; }
     public string? ParentCode { get; set; }
-    public int Level { get; private set; }
 }

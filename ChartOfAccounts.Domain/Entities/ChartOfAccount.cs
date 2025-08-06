@@ -9,7 +9,6 @@ public class ChartOfAccount
     public string Type { get; set; } = default!;
     public bool IsPostable { get; set; }
     public string? ParentCode { get; set; }
-    public int Level { get; private set; }
     public bool CanHaveChildren => !IsPostable;
     public string CodeNormalized { get; set; } = default!;
     public string RequestId { get; set; } = default!;
