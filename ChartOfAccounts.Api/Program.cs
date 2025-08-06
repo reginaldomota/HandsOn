@@ -1,5 +1,6 @@
 ﻿using ChartOfAccounts.Api.Config.DependencyInjection;
 using ChartOfAccounts.Api.Middlewares.Extensions;
+using ChartOfAccounts.Api.Swagger;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -48,6 +49,7 @@ builder.Services.AddSwaggerGen(options =>
         }
     };
 
+    options.OperationFilter<AddIdempotencyKeyHeaderOperationFilter>();
     options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -84,6 +86,7 @@ var app = builder.Build();
 app.UseAuthentication();
 
 app.UseErrorHandlerMiddleware();
+app.UseRequestTrackingMiddleware();
 app.UseTenantContextMiddleware();
 
 app.UseSwagger();

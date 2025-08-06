@@ -16,10 +16,6 @@ public class TenantContextMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        string? requestId = RequestIdentifierGenerator.Generate();
-        RequestContext.SetRequestIdentifier(requestId);
-
-        // TenantId extraído do JWT
         if (context.User.Identity?.IsAuthenticated == true)
         {
             Claim? tenantClaim = context.User.FindFirst("tenant");

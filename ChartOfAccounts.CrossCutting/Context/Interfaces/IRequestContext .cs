@@ -4,4 +4,5 @@ public interface IRequestContext
 {
     string? TenantId { get; }
     string RequestId { get; }
+    string? IdempotencyKey { get; }
 }
