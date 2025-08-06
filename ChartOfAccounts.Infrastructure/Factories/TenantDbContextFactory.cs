@@ -1,5 +1,4 @@
 ﻿using ChartOfAccounts.CrossCutting.Context.Interfaces;
-using ChartOfAccounts.CrossCutting.Tenancy.Interfaces;
 using ChartOfAccounts.Infrastructure.Data;
 using ChartOfAccounts.Infrastructure.Factories.Interfaces;
 
@@ -8,18 +7,17 @@ namespace ChartOfAccounts.Infrastructure.Factories;
 public class TenantDbContextFactory : ITenantDbContextFactory
 {
     private readonly IRequestContext _requestContext;
-    private readonly ITenantConnectionProvider _connectionProvider;
+    private readonly ITenantDbContextPoolProvider _poolProvider;
 
-    public TenantDbContextFactory(IRequestContext requestContext, ITenantConnectionProvider connectionProvider)
+    public TenantDbContextFactory(IRequestContext requestContext, ITenantDbContextPoolProvider poolProvider)
     {
         _requestContext = requestContext;
-        _connectionProvider = connectionProvider;
+        _poolProvider = poolProvider;
     }
 
     public AppDbContext CreateDbContext()
     {
         Guid tenantId = _requestContext.TenantId!.Value;
-        string connectionString = _connectionProvider.GetConnectionString(tenantId);
-        return new AppDbContext(connectionString);
+        return _poolProvider.GetDbContext(tenantId);
     }
 }

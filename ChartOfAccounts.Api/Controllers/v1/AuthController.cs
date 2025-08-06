@@ -20,9 +20,9 @@ public class AuthController : ControllerBase
 
     private readonly Dictionary<string, (string Password, string TenantId)> _users = new()
     {
-        ["tenant_1"] = ("123", "6b9a29df-482c-4b3e-9c38-032f3a39f45f"),
-        ["tenant_2"] = ("123", "c3c12e1a-7b96-4a2a-b21a-f0f9a95d8d4c"),
-        ["tenant_3"] = ("123", "44e0a5cf-8cf6-4b78-b49d-abc1df098118")
+        ["tenant_1"] = ("secret1", "5e0d1c8a-1000-4000-b000-000000000001"),
+        ["tenant_2"] = ("secret2", "5e0d1c8a-1000-4000-b000-000000000002"),
+        ["tenant_3"] = ("secret3", "5e0d1c8a-1000-4000-b000-000000000003")
     };
 
     [HttpPost("token")]

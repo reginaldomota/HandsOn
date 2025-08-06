@@ -7,7 +7,6 @@ using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Application.Services;
 using ChartOfAccounts.CrossCutting.Context;
 using ChartOfAccounts.CrossCutting.Context.Interfaces;
-using ChartOfAccounts.CrossCutting.Tenancy.Interfaces;
 using ChartOfAccounts.Domain.Interfaces;
 using ChartOfAccounts.Infrastructure.Factories;
 using ChartOfAccounts.Infrastructure.Factories.Interfaces;
@@ -49,7 +48,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<ITenantConnectionProvider, TenantConnectionProvider>();
+        services.AddScoped<ITenantDbContextPoolProvider, TenantDbContextPoolProvider>();
         services.AddScoped<ITenantDbContextFactory, TenantDbContextFactory>();
 
         // Repositórios
