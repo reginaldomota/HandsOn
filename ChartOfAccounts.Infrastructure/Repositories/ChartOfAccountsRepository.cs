@@ -3,6 +3,7 @@ using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Exceptions;
 using ChartOfAccounts.Domain.Interfaces;
 using ChartOfAccounts.Infrastructure.Data;
+using ChartOfAccounts.Infrastructure.Factories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
@@ -11,12 +12,10 @@ namespace ChartOfAccounts.Infrastructure.Repositories;
 public class ChartOfAccountsRepository : IChartOfAccountsRepository
 {
     private readonly AppDbContext _context;
-    private readonly IRequestContext _requestContext;
 
-    public ChartOfAccountsRepository(AppDbContext context, IRequestContext requestContext)
+    public ChartOfAccountsRepository(ITenantDbContextFactory contextFactory)
     {
-        _context = context;
-        _requestContext = requestContext;
+        _context = contextFactory.CreateDbContext();
     }
 
     public async Task<(List<ChartOfAccount> Items, int TotalCount)> GetPagedAsync(int page, int pageSize)

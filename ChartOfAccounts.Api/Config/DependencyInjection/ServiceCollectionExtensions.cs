@@ -7,10 +7,12 @@ using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Application.Services;
 using ChartOfAccounts.CrossCutting.Context;
 using ChartOfAccounts.CrossCutting.Context.Interfaces;
+using ChartOfAccounts.CrossCutting.Tenancy.Interfaces;
 using ChartOfAccounts.Domain.Interfaces;
-using ChartOfAccounts.Infrastructure.Data;
+using ChartOfAccounts.Infrastructure.Factories;
+using ChartOfAccounts.Infrastructure.Factories.Interfaces;
 using ChartOfAccounts.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
+using ChartOfAccounts.Infrastructure.Tenancy;
 
 namespace ChartOfAccounts.Api.Config.DependencyInjection;
 
@@ -47,9 +49,8 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Registra o DbContext com PostgreSQL
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+        services.AddScoped<ITenantConnectionProvider, TenantConnectionProvider>();
+        services.AddScoped<ITenantDbContextFactory, TenantDbContextFactory>();
 
         // Repositórios
         services.AddScoped<IChartOfAccountsRepository, ChartOfAccountsRepository>();
