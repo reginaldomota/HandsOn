@@ -36,8 +36,6 @@ public class ErrorHandlerMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Exception handled: {Message}", ex.Message);
-
             ErrorResponse response = _errorResponseFactory.Create(ex);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = response.StatusCode;

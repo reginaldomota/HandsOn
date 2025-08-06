@@ -86,6 +86,7 @@ var app = builder.Build();
 app.UseAuthentication();
 
 app.UseErrorHandlerMiddleware();
+app.UseRequestLogging();
 app.UseRequestTrackingMiddleware();
 app.UseTenantContextMiddleware();
 
