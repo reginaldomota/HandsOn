@@ -12,6 +12,47 @@ Este projeto implementa uma API para gerenciamento de Plano de Contas (Chart of 
 - **Normalização de códigos**: Armazenamento de versões normalizadas dos códigos para melhor pesquisa
 - **Segurança**: Autenticação via JWT para proteger os endpoints da API
 
+## 🏗️ Arquitetura do Sistema
+
+O projeto segue os princípios da **Arquitetura Limpa (Clean Architecture)** proposta por Robert C. Martin, organizando o código em camadas concêntricas com dependências apontando para o centro:
+
+### 🔄 Camadas da Arquitetura
+
+1. **Domain (Core)**: O núcleo da aplicação contendo:
+   - Entidades de negócio (Account, Tenant)
+   - Regras de negócio específicas do domínio
+   - Interfaces dos repositórios
+
+2. **Application**: Camada que implementa casos de uso do sistema:
+   - Serviços de aplicação
+   - DTOs (Data Transfer Objects)
+   - Interfaces para serviços de infraestrutura
+
+3. **Infrastructure**: Implementações concretas de:
+   - Acesso a dados (Repositórios PostgreSQL)
+   - Serviços externos
+   - Persistência e ORM
+
+4. **Presentation (API)**: Camada externa que expõe a funcionalidade:
+   - Controllers da API
+   - Filtros e middlewares
+   - Configuração da aplicação
+
+5. **Crosscutting**: Aspectos que permeiam todas as camadas:
+   - Autenticação e autorização
+   - Gestão de multitenancy
+   - Logging e tratamento de exceções
+   - Implementação de idempotência
+   - Helpers e extensões de uso comum
+
+### 🧩 Padrões e Princípios Implementados
+
+- **Dependency Inversion**: As dependências fluem de fora para dentro
+- **Repository Pattern**: Abstração da camada de dados
+- **CQRS**: Separação de responsabilidades entre comandos e consultas
+- **Mediator**: Comunicação entre componentes sem acoplamento direto
+- **Unit of Work**: Gerenciamento de transações e mudanças de estado
+
 ### Modelo de dados:
 
 A aplicação gerencia contas contábeis com os seguintes atributos:
