@@ -70,6 +70,15 @@ namespace ChartOfAccounts.CrossCutting.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Não foi possível realizar o cadastro. O limite de contas para o nível foi atingido.
+        /// </summary>
+        public static string Error_ChartOfAccounts_Create_LimitReached {
+            get {
+                return ResourceManager.GetString("Error_ChartOfAccounts_Create_LimitReached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Houve um conflito entre a nova tentativa e o estado previamente registrado para o Idempotency-Key {0}..
         /// </summary>
         public static string Error_ChartOfAccounts_IdempotencyConflict {

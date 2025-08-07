@@ -1,5 +1,4 @@
 ﻿using ChartOfAccounts.Application.DTOs.Common;
-using ChartOfAccounts.Application.Helpers;
 using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Enums;
@@ -14,6 +13,7 @@ namespace ChartOfAccounts.Application.Services;
 public class ChartOfAccountsService : IChartOfAccountsService
 {
     private readonly IChartOfAccountsRepository _repository;
+    private const int MaxLevel = 5;
 
     public ChartOfAccountsService(IChartOfAccountsRepository repository)
     {
@@ -39,6 +39,10 @@ public class ChartOfAccountsService : IChartOfAccountsService
     {
         try
         {
+            if(account?.ParentCode?.Split(".").Count() >= MaxLevel)
+                throw new BusinessRuleValidationException(
+                    string.Format(ErrorMessages.Error_ChartOfAccounts_Create_LimitReached, account.ParentCode));
+
             bool? isPostable = await _repository.IsPostableAsync(account.ParentCode!);
 
             if (isPostable is null)

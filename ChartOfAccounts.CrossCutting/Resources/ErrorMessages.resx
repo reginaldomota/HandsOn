@@ -135,4 +135,7 @@
   <data name="Error_Auth_InvalidCredentials" xml:space="preserve">
     <value>As credenciais informadas são inválidas</value>
   </data>
+  <data name="Error_ChartOfAccounts_Create_LimitReached" xml:space="preserve">
+    <value>Não foi possível realizar o cadastro. O limite de contas para o nível foi atingido</value>
+  </data>
 </root>
