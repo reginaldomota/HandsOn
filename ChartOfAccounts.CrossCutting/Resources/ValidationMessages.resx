@@ -135,4 +135,7 @@
   <data name="Validation_ChartOfAccounts_HasChildren" xml:space="preserve">
     <value>Não é possível excluir o plano de contas com código '{0}' porque ele possui contas filhas. Você deve excluir todas as contas filhas primeiro.</value>
   </data>
+  <data name="Validation_ChartOfAccounts_CodeMustStartWithParent" xml:space="preserve">
+    <value>O código '{0}' não possui o código '{1}' como pai. O código da conta deve começar com o código do pai seguido por um ponto.</value>
+  </data>
 </root>

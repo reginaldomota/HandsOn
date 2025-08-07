@@ -70,6 +70,15 @@ namespace ChartOfAccounts.CrossCutting.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to O código &apos;{0}&apos; não possui o código &apos;{1}&apos; como pai. O código da conta deve começar com o código do pai seguido por um ponto..
+        /// </summary>
+        public static string Validation_ChartOfAccounts_CodeMustStartWithParent {
+            get {
+                return ResourceManager.GetString("Validation_ChartOfAccounts_CodeMustStartWithParent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to O código {0} não foi encontrado..
         /// </summary>
         public static string Validation_ChartOfAccounts_CodeNotFound {

@@ -43,6 +43,11 @@ public class ChartOfAccountsService : IChartOfAccountsService
                 throw new BusinessRuleValidationException(
                     string.Format(ErrorMessages.Error_ChartOfAccounts_Create_LimitReached, account.ParentCode));
 
+            if (!string.IsNullOrEmpty(account.ParentCode) && !string.IsNullOrEmpty(account.Code) && 
+                !account.Code.StartsWith($"{account.ParentCode}."))
+                throw new BusinessRuleValidationException(
+                    string.Format(ValidationMessages.Validation_ChartOfAccounts_CodeMustStartWithParent, account.Code, account.ParentCode));
+
             ChartOfAccount? parent = await _repository.GetByCodeAsync(account.ParentCode!);
 
             if (parent?.IsPostable is null)
