@@ -43,15 +43,19 @@ public class ChartOfAccountsService : IChartOfAccountsService
                 throw new BusinessRuleValidationException(
                     string.Format(ErrorMessages.Error_ChartOfAccounts_Create_LimitReached, account.ParentCode));
 
-            bool? isPostable = await _repository.IsPostableAsync(account.ParentCode!);
+            ChartOfAccount? parent = await _repository.GetByCodeAsync(account.ParentCode!);
 
-            if (isPostable is null)
+            if (parent?.IsPostable is null)
                 throw new BusinessRuleValidationException(
                     string.Format(ValidationMessages.Validation_ChartOfAccounts_InvalidParentCode, account.ParentCode));
 
-            if (isPostable == true)
+            if (parent?.IsPostable == true)
                 throw new BusinessRuleValidationException(
                     string.Format(ValidationMessages.Validation_ChartOfAccounts_ParentIsPostable, account.ParentCode));
+
+            if(parent?.Type != account.Type)
+                throw new BusinessRuleValidationException(
+                    string.Format(ValidationMessages.Validation_ChartOfAccounts_InvalidParentType, account.ParentCode, parent.Type, account.Type));
 
             await _repository.CreateAsync(account);
         }
@@ -68,7 +72,7 @@ public class ChartOfAccountsService : IChartOfAccountsService
                 throw new BusinessRuleValidationException(
                     string.Format(ValidationMessages.Validation_ChartOfAccounts_CodeAlreadyExists, account.Code), ex);
 
-            chekAccount = await _repository.GetByIdempotencyKeyAsync(account.IdempotencyKey);
+            chekAccount = await _repository.GetByIdempotencyKeyAsync(account.IdempotencyKey!.Value);
 
             if (chekAccount != null)
                 throw new ErrorHttpRequestException(

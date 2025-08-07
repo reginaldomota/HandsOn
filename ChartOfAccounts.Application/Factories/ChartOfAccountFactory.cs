@@ -17,10 +17,10 @@ public class ChartOfAccountFactory : IChartOfAccountFactory
             Type = model.Type,
             IsPostable = model.IsPostable,
             CodeNormalized = CodeNormalizer.Normalize(model.Code),
-            ParentCode = ParentCode.GetParentCode(model.Code),
+            ParentCode = model.ParentCode,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
-            IdempotencyKey = context.IdempotencyKey!.Value,
+            IdempotencyKey = context.IdempotencyKey,
             RequestId = context.RequestId,
             TenantId = context.TenantId!.Value
         };

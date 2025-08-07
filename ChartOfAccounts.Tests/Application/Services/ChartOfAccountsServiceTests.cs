@@ -196,8 +196,8 @@ public class ChartOfAccountsServiceTests
             IdempotencyKey = Guid.NewGuid()
         };
 
-        _repositoryMock.Setup(repo => repo.GetByIdempotencyKeyAsync(account.IdempotencyKey))
-            .ReturnsAsync(new ChartOfAccount { Code = "1.01.03" }); // Different code, but same idempotency key
+        _repositoryMock.Setup(repo => repo.GetByIdempotencyKeyAsync(account.IdempotencyKey!.Value))
+            .ReturnsAsync(new ChartOfAccount { Code = "1.01.03" }); 
 
         // Act & Assert
         Func<Task> action = async () => await _service.CreateAsync(account);

@@ -9,7 +9,7 @@ public class ChartOfAccountResponseDto
         Code = entity.Code;
         Name = entity.Name;
         Type = entity.Type;
-        IsPostable = entity.IsPostable;
+        IsPostable = entity.IsPostable!.Value;
         ParentCode = entity.ParentCode;
     }
 

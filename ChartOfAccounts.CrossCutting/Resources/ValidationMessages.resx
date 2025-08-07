@@ -129,4 +129,7 @@
   <data name="Validation_ChartOfAccounts_CodeNotFound" xml:space="preserve">
     <value>O código {0} não foi encontrado.</value>
   </data>
+  <data name="Validation_ChartOfAccounts_InvalidParentType" xml:space="preserve">
+    <value>O tipo da conta '{2}' deve ser o mesmo que o tipo da conta pai '{0}' que é '{1}'.</value>
+  </data>
 </root>

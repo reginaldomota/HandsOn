@@ -4,14 +4,13 @@ namespace ChartOfAccounts.Application.DTOs.ChartOfAccounts;
 
 public record ChartOfAccountCreateDto
 {
-    [Required]
-    public string Code { get; set; } = default!;
+    public string? Code { get; set; } = default!;
 
-    [Required]
-    public string Name { get; set; } = default!;
+    public string? ParentCode { get; set; } = default!;
 
-    [Required]
-    public string Type { get; set; } = default!;
+    public string? Name { get; set; } = default!;
 
-    public bool IsPostable { get; set; }
+    public string? Type { get; set; } = default!;
+
+    public bool? IsPostable { get; set; }
 }

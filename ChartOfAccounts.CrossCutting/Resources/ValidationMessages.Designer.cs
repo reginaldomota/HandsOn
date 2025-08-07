@@ -88,6 +88,15 @@ namespace ChartOfAccounts.CrossCutting.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to O tipo da conta &apos;{2}&apos; deve ser o mesmo que o tipo da conta pai &apos;{0}&apos; que é &apos;{1}&apos;..
+        /// </summary>
+        public static string Validation_ChartOfAccounts_InvalidParentType {
+            get {
+                return ResourceManager.GetString("Validation_ChartOfAccounts_InvalidParentType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to O código {0} não aceita contas filhas pois ele permite lançamentos..
         /// </summary>
         public static string Validation_ChartOfAccounts_ParentIsPostable {
