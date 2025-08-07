@@ -29,7 +29,7 @@ public class AccountCodeSuggestionService : IAccountCodeSuggestionService
             throw new BusinessRuleValidationException(
                 string.Format(ValidationMessages.Validation_ChartOfAccounts_ParentIsPostable, parentCode));
 
-        var parentLevel = parentCode.Split('.').Length;
+        int parentLevel = parentCode.Split('.').Length;
         return await SuggestNextCodeRecursiveAsync(parentCode, parentLevel);
     }
 
@@ -38,17 +38,17 @@ public class AccountCodeSuggestionService : IAccountCodeSuggestionService
         if (level >= MaxLevel)
             return null;
 
-        var childCodes = await _repository.GetChildrenCodesAsync(currentCode);
-        var nextChild = GetNextSuffix(childCodes, currentCode);
+        List<string> childCodes = await _repository.GetChildrenCodesAsync(currentCode);
+        int nextChild = GetNextSuffix(childCodes, currentCode);
 
         if (nextChild <= MaxChildren)
             return $"{currentCode}.{nextChild}";
 
-        var parentCode = GetParentCode(currentCode);
+        string? parentCode = GetParentCode(currentCode);
         if (parentCode == null)
             return null;
 
-        var parentLevel = parentCode.Split('.').Length;
+        int parentLevel = parentCode.Split('.').Length;
         return await SuggestNextCodeRecursiveAsync(parentCode, parentLevel);
     }
 
@@ -64,7 +64,7 @@ public class AccountCodeSuggestionService : IAccountCodeSuggestionService
 
     private string? GetParentCode(string code)
     {
-        var parts = code.Split('.');
+        string[] parts = code.Split('.');
         return parts.Length > 1
             ? string.Join('.', parts.Take(parts.Length - 1))
             : null;
@@ -74,8 +74,8 @@ public class AccountCodeSuggestionService : IAccountCodeSuggestionService
     {
         if (!childCode.StartsWith(parentCode + ".")) return null;
 
-        var suffix = childCode.Substring(parentCode.Length + 1);
-        var nextPart = suffix.Split('.').First();
+        string suffix = childCode.Substring(parentCode.Length + 1);
+        string nextPart = suffix.Split('.').First();
 
         return int.TryParse(nextPart, out int value) ? value : null;
     }
