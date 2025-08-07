@@ -3,9 +3,9 @@ using ChartOfAccounts.Application.DTOs.Common;
 using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.CrossCutting.Context.Interfaces;
 using ChartOfAccounts.Domain.Entities;
-using ChartOfAccounts.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace ChartOfAccounts.Api.Controllers.v1;
 
@@ -51,7 +51,12 @@ public class AccountsController : ControllerBase
         ChartOfAccount? account = await _service.GetByCodeAsync(code);
 
         if (account == null)
-            return NotFound();
+            return NotFound(new
+            {
+                StatusCode = (int)HttpStatusCode.NotFound,
+                ErrorCode = Domain.Enums.ErrorCode.NotFound.ToString(),
+                Message = $"O código {code} não foi encontrado."
+            });
 
         return Ok(new ChartOfAccountResponseDto(account));
     }
