@@ -1,4 +1,6 @@
 ﻿using ChartOfAccounts.Application.Interfaces;
+using ChartOfAccounts.CrossCutting.Resources;
+using ChartOfAccounts.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -28,8 +30,8 @@ public class AccountCodeSuggestionController : ControllerBase
             return NotFound(new
             {
                 StatusCode = (int)HttpStatusCode.NotFound,
-                ErrorCode = Domain.Enums.ErrorCode.NotFound.ToString(),
-                Message = "Não foi possível sugerir um próximo código. Limite atingido"
+                ErrorCode = ErrorCode.NotFound.ToString(),
+                Message = ErrorMessages.Error_ChartOfAccounts_Suggestion_LimitReached
             });
 
         return Ok(suggestion);
