@@ -9,7 +9,7 @@ namespace ChartOfAccounts.Application.Services;
 public class AccountCodeSuggestionService : IAccountCodeSuggestionService
 {
     private readonly IChartOfAccountsRepository _repository;
-    private const int MaxLevel = 5;
+    private const int MaxLevel = int.MaxValue;
     private const int MaxChildren = 999;
 
     public AccountCodeSuggestionService(IChartOfAccountsRepository repository)

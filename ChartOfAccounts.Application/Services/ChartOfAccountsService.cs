@@ -13,7 +13,7 @@ namespace ChartOfAccounts.Application.Services;
 public class ChartOfAccountsService : IChartOfAccountsService
 {
     private readonly IChartOfAccountsRepository _repository;
-    private const int MaxLevel = 5;
+    private const int MaxLevel = int.MaxValue;
 
     public ChartOfAccountsService(IChartOfAccountsRepository repository)
     {
