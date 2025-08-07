@@ -1,9 +1,14 @@
 ﻿using ChartOfAccounts.Application.DTOs;
 using ChartOfAccounts.Application.DTOs.Auth;
+using ChartOfAccounts.CrossCutting.Resources;
+using ChartOfAccounts.Domain.Enums;
+using ChartOfAccounts.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 
 namespace ChartOfAccounts.Api.Controllers.v1;
@@ -31,8 +36,14 @@ public class AuthController : ControllerBase
         if (!_users.TryGetValue(login.Username, out var userInfo)
                 || userInfo.Password != login.Password
                 || userInfo.TenantId != login.TenantId)
-            return Unauthorized("Credenciais inválidas");
-
+            return Unauthorized(new
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized,
+                    ErrorCode = ErrorCode.Unauthorized.ToString(),
+                    Message = ErrorMessages.Error_Auth_InvalidCredentials
+                });
+                
+               
         DateTime expiresAt = DateTime.UtcNow.AddHours(1);
         long expUnix = EpochTime.GetIntDate(expiresAt);
 

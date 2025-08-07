@@ -132,4 +132,7 @@
   <data name="Error_DataIntegrityViolation" xml:space="preserve">
     <value>Violação de Integridade de dados.</value>
   </data>
+  <data name="Error_Auth_InvalidCredentials" xml:space="preserve">
+    <value>As credenciais informadas são inválidas</value>
+  </data>
 </root>
