@@ -22,6 +22,7 @@ public class TenantContextMiddleware
             if (tenantClaim != null)
             {
                 RequestContext.SetTenant(Guid.Parse(tenantClaim.Value));
+                TenantContextHolder.TenantId = Guid.Parse(tenantClaim.Value);
             }
         }
 

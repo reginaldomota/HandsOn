@@ -3,6 +3,7 @@ using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Exceptions;
 using ChartOfAccounts.Domain.Interfaces;
 using ChartOfAccounts.Infrastructure.Data;
+using ChartOfAccounts.Infrastructure.Extensions;
 using ChartOfAccounts.Infrastructure.Factories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -27,6 +28,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
             int totalCount = await query.CountAsync();
 
             List<ChartOfAccount> items = await query
+                .ForCurrentTenant()
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -44,6 +46,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         try
         {
             return await _context.Set<ChartOfAccount>()
+                .ForCurrentTenant()
                 .FirstOrDefaultAsync(x => x.Code == code);
         }
         catch (Exception ex)
@@ -57,6 +60,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         try
         {
             return await _context.Set<ChartOfAccount>()
+                .ForCurrentTenant()
                 .FirstOrDefaultAsync(x => x.IdempotencyKey == idempotencyKey);
         }
         catch (Exception ex)
@@ -70,6 +74,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         try
         {
             bool? isPostable = await _context.ChartOfAccounts
+                .ForCurrentTenant()
                 .Where(c => c.Code == code)
                 .Select(c => (bool?)c.IsPostable)
                 .FirstOrDefaultAsync();
@@ -122,6 +127,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         {
             return await _context
                 .Set<ChartOfAccount>()
+                .ForCurrentTenant()
                 .Where(c => c.Code.StartsWith(parentCode + "."))
                 .Select(c => c.Code)
                 .ToListAsync();

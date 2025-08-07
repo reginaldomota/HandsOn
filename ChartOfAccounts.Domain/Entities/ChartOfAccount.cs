@@ -1,6 +1,8 @@
-﻿namespace ChartOfAccounts.Domain.Entities;
+﻿using ChartOfAccounts.Domain.Interfaces;
 
-public class ChartOfAccount
+namespace ChartOfAccounts.Domain.Entities;
+
+public class ChartOfAccount : ITenantEntity
 {
     public int Id { get; set; }
     public Guid IdempotencyKey { get; set; }

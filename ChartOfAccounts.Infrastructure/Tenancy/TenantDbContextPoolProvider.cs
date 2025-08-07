@@ -11,7 +11,7 @@ namespace ChartOfAccounts.Infrastructure.Tenancy;
 public class TenantDbContextPoolProvider : ITenantDbContextPoolProvider
 {
     private readonly IConfiguration _configuration;
-    private readonly ConcurrentDictionary<Guid, DbContextOptions<AppDbContext>> _optionsCache = new();
+    private static readonly ConcurrentDictionary<Guid, DbContextOptions<AppDbContext>> _optionsCache = new();
 
     public TenantDbContextPoolProvider(IConfiguration configuration)
     {
