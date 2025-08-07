@@ -44,7 +44,7 @@ public class AccountCodeSuggestionService : IAccountCodeSuggestionService
         if (level >= MaxLevel)
             return null;
 
-        List<string> childCodes = await _repository.GetChildrenCodesAsync(currentCode);
+        List<string?> childCodes = await _repository.GetChildrenCodesAsync(currentCode);
         int nextChild = GetNextSuffix(childCodes, currentCode);
 
         if (nextChild <= MaxChildren)

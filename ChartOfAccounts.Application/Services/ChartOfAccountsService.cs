@@ -82,5 +82,12 @@ public class ChartOfAccountsService : IChartOfAccountsService
         }
     }
 
-    public Task DeleteAsync(string code) => _repository.DeleteAsync(code);
+    public async Task DeleteAsync(string code)
+    {
+        if(await _repository.HasChildrenAsync(code))
+            throw new BusinessRuleValidationException(
+                string.Format(ValidationMessages.Validation_ChartOfAccounts_HasChildren, code));
+
+        await _repository.DeleteAsync(code);
+    }
 }

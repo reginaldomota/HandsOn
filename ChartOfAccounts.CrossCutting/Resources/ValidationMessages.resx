@@ -132,4 +132,7 @@
   <data name="Validation_ChartOfAccounts_InvalidParentType" xml:space="preserve">
     <value>O tipo da conta '{2}' deve ser o mesmo que o tipo da conta pai '{0}' que é '{1}'.</value>
   </data>
+  <data name="Validation_ChartOfAccounts_HasChildren" xml:space="preserve">
+    <value>Não é possível excluir o plano de contas com código '{0}' porque ele possui contas filhas. Você deve excluir todas as contas filhas primeiro.</value>
+  </data>
 </root>

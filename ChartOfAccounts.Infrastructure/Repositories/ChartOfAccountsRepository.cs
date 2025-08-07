@@ -150,7 +150,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
     }
 
-    public async Task<List<string>> GetChildrenCodesAsync(string parentCode)
+    public async Task<List<string?>> GetChildrenCodesAsync(string parentCode)
     {
         try
         {
@@ -160,6 +160,20 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
                 .Where(c => c.Code.StartsWith(parentCode + "."))
                 .Select(c => c.Code)
                 .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new ServiceUnavailableException(ErrorMessages.Error_ServiceUnavailable, ex);
+        }
+    }
+
+    public async Task<bool> HasChildrenAsync(string code)
+    {
+        try
+        {
+            return await _context.Set<ChartOfAccount>()
+                .ForCurrentTenant()
+                .AnyAsync(c => c.Code.StartsWith(code + "."));
         }
         catch (Exception ex)
         {

@@ -34,7 +34,7 @@ public class AccountsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<PaginatedResultDto<ChartOfAccountResponseDto>>> GetAll(
         [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20,
+        [FromQuery] int pageSize = 100,
         [FromQuery] string? find = null,
         [FromQuery] bool? isPostable = null)
     {

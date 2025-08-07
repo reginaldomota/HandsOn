@@ -79,6 +79,15 @@ namespace ChartOfAccounts.CrossCutting.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Não é possível excluir o plano de contas com código &apos;{0}&apos; porque ele possui contas filhas. Você deve excluir todas as contas filhas primeiro..
+        /// </summary>
+        public static string Validation_ChartOfAccounts_HasChildren {
+            get {
+                return ResourceManager.GetString("Validation_ChartOfAccounts_HasChildren", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to O código {0} não existe ou não é um código pai válido..
         /// </summary>
         public static string Validation_ChartOfAccounts_InvalidParentCode {

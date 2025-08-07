@@ -10,5 +10,6 @@ public interface IChartOfAccountsRepository
     Task<bool?> IsPostableAsync(string code);
     Task CreateAsync(ChartOfAccount account);
     Task DeleteAsync(string code);
-    Task<List<string>> GetChildrenCodesAsync(string parentCode);
+    Task<List<string?>> GetChildrenCodesAsync(string parentCode);
+    Task<bool> HasChildrenAsync(string code);
 }
