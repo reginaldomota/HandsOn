@@ -1,19 +1,19 @@
 ﻿using ChartOfAccounts.Application.DTOs.Common;
 using ChartOfAccounts.Application.Interfaces;
+using ChartOfAccounts.CrossCutting.Resources;
 using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Enums;
 using ChartOfAccounts.Domain.Exceptions;
 using ChartOfAccounts.Domain.Interfaces;
 using ChartOfAccounts.Domain.Services;
 using System.Net;
-using ChartOfAccounts.CrossCutting.Resources;
 
 namespace ChartOfAccounts.Application.Services;
 
 public class ChartOfAccountsService : IChartOfAccountsService
 {
     private readonly IChartOfAccountsRepository _repository;
-    private const int MaxLevel = int.MaxValue;
+    private const int MaxLevel = 256;
 
     public ChartOfAccountsService(IChartOfAccountsRepository repository)
     {

@@ -7,6 +7,7 @@ using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace ChartOfAccounts.Api.Controllers.v1;
@@ -71,6 +72,27 @@ public class AccountsController : ControllerBase
     public async Task<IActionResult> Create([FromBody] ChartOfAccountCreateDto model)
     {
         ChartOfAccount account = _chartOfAccount.Create(model, _requestContext);
+
+        var validationResults = new List<ValidationResult>();
+        bool isValid = Validator.TryValidateObject(account, new ValidationContext(account), validationResults, validateAllProperties: true);
+
+        if (!isValid)
+        {
+            var errors = validationResults
+                .GroupBy(r => r.MemberNames.FirstOrDefault() ?? string.Empty)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(r => r.ErrorMessage).ToArray()
+                );
+
+            return BadRequest(new
+                {
+                    StatusCode = (int)HttpStatusCode.BadRequest,
+                    ErrorCode = ErrorCode.ValidationError.ToString(),
+                    Message = string.Format(ErrorMessages.Error_ChartOfAccounts_ValidationFailed),
+                    Detail = errors
+            });
+        }
 
         await _service.CreateAsync(account);
 

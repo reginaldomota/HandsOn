@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChartOfAccounts.CrossCuttin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChartOfAccounts.Api", "ChartOfAccounts.Api\ChartOfAccounts.Api.csproj", "{854346F2-FA09-CA3A-1650-51DABAF77A3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChartOfAccounts.Tests", "ChartOfAccounts.Tests\ChartOfAccounts.Tests.csproj", "{16147AD6-3FF3-410B-9429-53E989088330}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{854346F2-FA09-CA3A-1650-51DABAF77A3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{854346F2-FA09-CA3A-1650-51DABAF77A3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{854346F2-FA09-CA3A-1650-51DABAF77A3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16147AD6-3FF3-410B-9429-53E989088330}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16147AD6-3FF3-410B-9429-53E989088330}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16147AD6-3FF3-410B-9429-53E989088330}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16147AD6-3FF3-410B-9429-53E989088330}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

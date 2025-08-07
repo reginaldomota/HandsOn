@@ -1,6 +1,7 @@
 ﻿using ChartOfAccounts.Api.Config.DependencyInjection;
 using ChartOfAccounts.Api.Middlewares.Extensions;
 using ChartOfAccounts.Api.Swagger;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -14,7 +15,6 @@ var apiVersions = new[] { "v1" };
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
 
 
 // Swagger configurado para múltiplas versões

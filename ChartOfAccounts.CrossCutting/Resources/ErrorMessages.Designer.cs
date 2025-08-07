@@ -106,6 +106,15 @@ namespace ChartOfAccounts.CrossCutting.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erro de validação nos dados enviados. Verifique os campos e tente novamente..
+        /// </summary>
+        public static string Error_ChartOfAccounts_ValidationFailed {
+            get {
+                return ResourceManager.GetString("Error_ChartOfAccounts_ValidationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Violação de Integridade de dados..
         /// </summary>
         public static string Error_DataIntegrityViolation {

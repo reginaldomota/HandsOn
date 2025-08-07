@@ -138,4 +138,7 @@
   <data name="Error_ChartOfAccounts_Create_LimitReached" xml:space="preserve">
     <value>Não foi possível realizar o cadastro. O limite de contas para o nível foi atingido</value>
   </data>
+  <data name="Error_ChartOfAccounts_ValidationFailed" xml:space="preserve">
+    <value>Erro de validação nos dados enviados. Verifique os campos e tente novamente.</value>
+  </data>
 </root>

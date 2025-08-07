@@ -8,6 +8,7 @@ using ChartOfAccounts.Infrastructure.Extensions;
 using ChartOfAccounts.Infrastructure.Factories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace ChartOfAccounts.Infrastructure.Repositories;
@@ -106,6 +107,8 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
 
     public async Task CreateAsync(ChartOfAccount account)
     {
+        Validator.ValidateObject(account, new ValidationContext(account), validateAllProperties: true);
+
         try
         {
             _context.ChartOfAccounts.Add(account);
