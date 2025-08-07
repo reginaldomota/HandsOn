@@ -1,9 +1,9 @@
 # Caminho absoluto do .env (ajustado para rodar dentro da pasta /Scripts)
 $envFilePath = Join-Path $PSScriptRoot "..\.env"
 
-Write-Host "Carregando vari·veis do .env de $envFilePath..."
+Write-Host "Carregando vari√°veis do .env de $envFilePath..."
 
-# LÍ o .env e exporta vari·veis no ambiente atual
+# L√™ o .env e exporta vari√°veis no ambiente atual
 Get-Content $envFilePath | ForEach-Object {
     if ($_ -match "^\s*([^#][^=]+)=(.+)$") {
         $name = $matches[1].Trim()
@@ -17,9 +17,9 @@ docker stop hands-on-dev-container 2>$null
 docker rm hands-on-dev-container 2>$null
 
 Write-Host "Construindo nova imagem da API..."
-docker build -t hands-on-dev-api ..  # Dockerfile est· na raiz
+docker build -t hands-on-dev-api ..  # Dockerfile est√° na raiz
 
-Write-Host "Criando container com vari·veis de ambiente..."
+Write-Host "Criando container com vari√°eis de ambiente..."
 docker run -d `
     -p 8080:8080 `
     --network container_network `

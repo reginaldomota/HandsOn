@@ -109,21 +109,21 @@ docker network create container_network
 ## 🐘 3. Executar PostgreSQL
 
 ```bash
-docker run --name Postgres --network container_network -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root1234 -e POSTGRES_DB=accounts -p 5432:5432 -d postgres
+docker run --name Postgres --network container_network -e POSTGRES_USER=postgresuser -e POSTGRES_PASSWORD=admin1234 -e POSTGRES_DB=accounts -p 5432:5432 -d postgres
 ```
 
 > **O que está acontecendo:** Este comando cria e inicia um container PostgreSQL com as seguintes características:
 > - `--name Postgres`: Define o nome do container como "Postgres" para fácil referência
 > - `--network container_network`: Conecta o container à rede que criamos anteriormente
-> - `-e POSTGRES_USER=root`: Cria um usuário administrador chamado "root"
-> - `-e POSTGRES_PASSWORD=root1234`: Define a senha deste usuário
+> - `-e POSTGRES_USER=postgresuser`: Cria um usuário administrador chamado "root"
+> - `-e POSTGRES_PASSWORD=admin1234`: Define a senha deste usuário
 > - `-e POSTGRES_DB=accounts`: Cria automaticamente um banco de dados chamado "accounts"
 > - `-p 5432:5432`: Mapeia a porta 5432 do container para a porta 5432 do host, permitindo conexões externas
 > - `-d`: Executa o container em segundo plano (modo detached)
 
 ---
 
-## 🛀️ 4. Criar arquivo `servers.json`
+## 🛀️ 4. Criar arquivo `postgres_server.json`
 
 ```json
 {
@@ -134,8 +134,8 @@ docker run --name Postgres --network container_network -e POSTGRES_USER=root -e 
       "Host": "Postgres",
       "Port": 5432,
       "MaintenanceDB": "accounts",
-      "Username": "root",
-      "Password": "root1234",
+      "Username": "postgresuser",
+      "Password": "admin1234",
       "SSLMode": "prefer"
     }
   }
@@ -158,13 +158,13 @@ Salve no mesmo diretório onde você ira rodar o pgAdmin.
 ### 💼 Linux/macOS:
 
 ```bash
-docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="user@yourmail.com" -e PGADMIN_DEFAULT_PASSWORD="user1234" -v "$(pwd)/servers.json":/pgadmin4/servers.json -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
+docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="user@yourmail.com" -e PGADMIN_DEFAULT_PASSWORD="user1234" -v "$(pwd)/postgres_server.json":/pgadmin4/servers.json -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
 ```
 
 ### 🪠 Windows PowerShell:
 
 ```powershell
-docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="user@yourmail.com" -e PGADMIN_DEFAULT_PASSWORD="user1234" -v "${PWD}\servers.json:/pgadmin4/servers.json" -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
+docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="user@yourmail.com" -e PGADMIN_DEFAULT_PASSWORD="user1234" -v "${PWD}\postgres_server.json:/pgadmin4/servers.json" -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
 ```
 
 > **O que está acontecendo:** Este comando cria e inicia um container pgAdmin com as seguintes características:
@@ -172,7 +172,7 @@ docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFA
 > - `--network container_network`: Conecta o container à mesma rede do PostgreSQL
 > - `-p 8090:80`: Mapeia a porta 80 do container para a porta 8090 do host, permitindo acesso via navegador
 > - `-e PGADMIN_DEFAULT_EMAIL/PASSWORD`: Define credenciais para acessar o pgAdmin
-> - `-v "$(pwd)/servers.json:/pgadmin4/servers.json"`: Monta o arquivo de configuração que criamos dentro do container
+> - `-v "$(pwd)/postgres_server.json:/pgadmin4/servers.json"`: Monta o arquivo de configuração que criamos dentro do container
 > - `-e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json"`: Indica ao pgAdmin para usar nosso arquivo de configuração
 > - `-d`: Executa o container em segundo plano (modo detached)
 
@@ -184,14 +184,14 @@ docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFA
 
 ```bash
 git clone https://github.com/reginaldomota/HandsOn.git
-cd HandsOn/Scripts
+cd HandsOn
 ```
 
 > **O que está acontecendo:** Clonamos o repositório que contém o código-fonte da API de Plano de Contas e navegamos para o diretório do projeto. Este código contém uma aplicação ASP.NET Core que implementa os endpoints RESTful para gerenciar o plano de contas.
 
 ### 💡 Dockerfile incluído no repositório
 
-> Já está presente em `HandsOn/HandsOn/Dockerfile` com configuração pronta:
+> Já está presente em `HandsOn/Dockerfile` com configuração pronta:
 
 ```dockerfile
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
@@ -248,8 +248,7 @@ Baixe o arquivo de criação da tabela:
 
 ```bash
 docker cp Scripts/table_chart_of_accounts.sql Postgres:/table_chart_of_accounts.sql
-
-docker exec -it Postgres psql -U root -d accounts -f /table_chart_of_accounts.sql
+docker exec -it Postgres psql -U postgresuser -d accounts -f /table_chart_of_accounts.sql
 ```
 
 > **O que está acontecendo:** Estamos executando dois comandos:
@@ -268,8 +267,7 @@ Baixe e copie o arquivo de inserção:
 
 ```bash
 docker cp Scripts/insert_data_chart_of_accounts.sql Postgres:/insert_data_chart_of_accounts.sql
-
-docker exec -it Postgres psql -U root -d accounts -f /insert_data_chart_of_accounts.sql
+docker exec -it Postgres psql -U postgresuser -d accounts -f /insert_data_chart_of_accounts.sql
 ```
 
 > **O que está acontecendo:** Similar ao passo anterior, estamos:
@@ -288,8 +286,8 @@ http://localhost:8090
 ```
 
 Entre com as credenciais definidas:
-- **Email**: reginaldomotacc@gmail.com
-- **Senha**: rm1234
+- **Email**: user@yourmail.com
+- **Senha**: user1234
 
 > **O que está acontecendo:** Estamos acessando a interface web do pgAdmin, uma ferramenta de administração para PostgreSQL. Aqui você pode visualizar, editar e gerenciar visualmente seu banco de dados.
 
@@ -365,5 +363,7 @@ Agora todas as suas requisições serão autenticadas e os dados serão filtrado
 # Response
 ```json
 {
-  "token": "SEU_TOKEN_JWT"
+  "accessToken": "seu token",
+  "tokenType": "Bearer",
+  "exp": 0000000000
 }
