@@ -2,7 +2,9 @@
 using ChartOfAccounts.Application.DTOs.Common;
 using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.CrossCutting.Context.Interfaces;
+using ChartOfAccounts.CrossCutting.Resources;
 using ChartOfAccounts.Domain.Entities;
+using ChartOfAccounts.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -54,8 +56,8 @@ public class AccountsController : ControllerBase
             return NotFound(new
             {
                 StatusCode = (int)HttpStatusCode.NotFound,
-                ErrorCode = Domain.Enums.ErrorCode.NotFound.ToString(),
-                Message = $"O código {code} não foi encontrado."
+                ErrorCode = ErrorCode.NotFound.ToString(),
+                Message = string.Format(ErrorMessages.Error_ChartOfAccounts_NotFound, code)
             });
 
         return Ok(new ChartOfAccountResponseDto(account));

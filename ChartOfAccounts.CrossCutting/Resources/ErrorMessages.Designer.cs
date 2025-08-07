@@ -61,6 +61,15 @@ namespace ChartOfAccounts.CrossCutting.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to O código {0} não foi encontrado..
+        /// </summary>
+        public static string Error_ChartOfAccounts_NotFound {
+            get {
+                return ResourceManager.GetString("Error_ChartOfAccounts_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Não foi possível sugerir um próximo código. Limite atingido.
         /// </summary>
         public static string Error_ChartOfAccounts_Suggestion_LimitReached {
