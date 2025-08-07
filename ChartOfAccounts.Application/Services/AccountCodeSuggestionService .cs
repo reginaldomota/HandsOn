@@ -17,7 +17,7 @@ public class AccountCodeSuggestionService : IAccountCodeSuggestionService
         _repository = repository;
     }
 
-    public async Task<string?> SuggestNextCodeAsync(string parentCode)
+    public async Task<(string? SuggestedCode, string? Type)> SuggestNextCodeAsync(string parentCode)
     {
         bool? isPostable = await _repository.IsPostableAsync(parentCode);
         
@@ -30,7 +30,13 @@ public class AccountCodeSuggestionService : IAccountCodeSuggestionService
                 string.Format(ValidationMessages.Validation_ChartOfAccounts_ParentIsPostable, parentCode));
 
         int parentLevel = parentCode.Split('.').Length;
-        return await SuggestNextCodeRecursiveAsync(parentCode, parentLevel);
+
+        ChartOfAccount? account = await _repository.GetByCodeAsync(parentCode);
+        string? type = account?.Type;
+
+        string? suggestedCode = await SuggestNextCodeRecursiveAsync(parentCode, parentLevel);
+
+        return (suggestedCode, type);
     }
 
     private async Task<string?> SuggestNextCodeRecursiveAsync(string currentCode, int level)

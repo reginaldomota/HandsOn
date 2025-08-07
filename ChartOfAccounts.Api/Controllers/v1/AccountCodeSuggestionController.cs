@@ -25,8 +25,8 @@ public class AccountCodeSuggestionController : ControllerBase
     [HttpGet("{parentCode}")]
     public async Task<ActionResult<string>> SuggestNextCode(string parentCode)
     {
-        string? suggestion = await _suggestionService.SuggestNextCodeAsync(parentCode);
-
+        (string? suggestion, string? type) = await _suggestionService.SuggestNextCodeAsync(parentCode);
+            
         if (string.IsNullOrWhiteSpace(suggestion))
             return NotFound(new
             {
@@ -35,6 +35,6 @@ public class AccountCodeSuggestionController : ControllerBase
                 Message = ErrorMessages.Error_ChartOfAccounts_Suggestion_LimitReached
             });
 
-        return Ok(new AccountCodeSuggestionResponseDto { SuggestedCode = suggestion }); 
+        return Ok(new AccountCodeSuggestionResponseDto { SuggestedCode = suggestion, Type = type });
     }
 }
