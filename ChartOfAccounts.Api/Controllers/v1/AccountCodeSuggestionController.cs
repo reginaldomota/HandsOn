@@ -1,6 +1,7 @@
 ﻿using ChartOfAccounts.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace ChartOfAccounts.Api.Controllers.v1;
 
@@ -24,7 +25,12 @@ public class AccountCodeSuggestionController : ControllerBase
         string? suggestion = await _suggestionService.SuggestNextCodeAsync(parentCode);
 
         if (string.IsNullOrWhiteSpace(suggestion))
-            return NotFound("Não foi possível sugerir um próximo código.");
+            return NotFound(new
+            {
+                StatusCode = (int)HttpStatusCode.NotFound,
+                ErrorCode = Domain.Enums.ErrorCode.NotFound.ToString(),
+                Message = "Não foi possível sugerir um próximo código."
+            });
 
         return Ok(suggestion);
     }
