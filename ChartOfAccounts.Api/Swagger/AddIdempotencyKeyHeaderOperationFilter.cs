@@ -10,6 +10,11 @@ public class AddIdempotencyKeyHeaderOperationFilter : IOperationFilter
         if (context.ApiDescription.HttpMethod?.ToUpper() != "POST")
             return;
 
+        // Exclui o endpoint de autenticação
+        var relativePath = context.ApiDescription.RelativePath?.ToLowerInvariant();
+        if (relativePath == "api/v1/auth/token")
+            return;
+
         operation.Parameters ??= new List<OpenApiParameter>();
 
         operation.Parameters.Add(new OpenApiParameter
