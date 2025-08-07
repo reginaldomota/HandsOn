@@ -86,5 +86,23 @@ namespace ChartOfAccounts.CrossCutting.Resources {
                 return ResourceManager.GetString("Error_ChartOfAccounts_Suggestion_LimitReached", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Violação de Integridade de dados..
+        /// </summary>
+        public static string Error_DataIntegrityViolation {
+            get {
+                return ResourceManager.GetString("Error_DataIntegrityViolation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Serviço temporariamente indisponível. Tente novamente mais tarde..
+        /// </summary>
+        public static string Error_ServiceUnavailable {
+            get {
+                return ResourceManager.GetString("Error_ServiceUnavailable", resourceCulture);
+            }
+        }
     }
 }

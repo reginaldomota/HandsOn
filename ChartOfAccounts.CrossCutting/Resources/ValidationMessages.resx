@@ -126,4 +126,7 @@
   <data name="Validation_ChartOfAccounts_CodeAlreadyExists" xml:space="preserve">
     <value>O código {0} já existe.</value>
   </data>
+  <data name="Validation_ChartOfAccounts_CodeNotFound" xml:space="preserve">
+    <value>O código {0} não foi encontrado.</value>
+  </data>
 </root>

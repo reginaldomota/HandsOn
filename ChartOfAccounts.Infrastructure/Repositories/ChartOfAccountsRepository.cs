@@ -1,4 +1,5 @@
 ﻿using ChartOfAccounts.CrossCutting.Context.Interfaces;
+using ChartOfAccounts.CrossCutting.Resources;
 using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Exceptions;
 using ChartOfAccounts.Domain.Interfaces;
@@ -38,7 +39,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
         catch (Exception ex)
         {
-            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex);
+            throw new ServiceUnavailableException(ErrorMessages.Error_ServiceUnavailable, ex);
         }
     }
 
@@ -52,7 +53,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
         catch (Exception ex)
         {
-            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex);
+            throw new ServiceUnavailableException(ErrorMessages.Error_ServiceUnavailable, ex);
         }
     }
 
@@ -66,7 +67,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
         catch (Exception ex)
         {
-            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex);
+            throw new ServiceUnavailableException(ErrorMessages.Error_ServiceUnavailable, ex);
         }
     }
 
@@ -84,7 +85,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
         catch (Exception ex)
         {
-            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex);
+            throw new ServiceUnavailableException(ErrorMessages.Error_ServiceUnavailable, ex);
         }
     }
 
@@ -97,11 +98,11 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
         catch (DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == PostgresErrorCodes.UniqueViolation)
         {
-            throw new DataIntegrityViolationException("Violação de Integridade de dados", ex);
+            throw new DataIntegrityViolationException(ErrorMessages.Error_DataIntegrityViolation, ex);
         }
         catch (Exception ex)
         {
-            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex);
+            throw new ServiceUnavailableException(ErrorMessages.Error_ServiceUnavailable, ex);
         }
     }
 
@@ -112,7 +113,10 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
             ChartOfAccount? entity = await GetByCodeAsync(code);
 
             if (entity == null)
-                throw new ErrorHttpRequestException($"O código {code} não foi encontrado", (int)HttpStatusCode.NotFound, Domain.Enums.ErrorCode.NotFound);
+                throw new ErrorHttpRequestException(
+                    string.Format(ValidationMessages.Validation_ChartOfAccounts_CodeNotFound, code),
+                    (int)HttpStatusCode.NotFound,
+                    Domain.Enums.ErrorCode.NotFound);
 
             _context.ChartOfAccounts.Remove(entity);
             await _context.SaveChangesAsync();
@@ -124,7 +128,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
         catch (Exception ex)
         {
-            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex);
+            throw new ServiceUnavailableException(ErrorMessages.Error_ServiceUnavailable, ex);
         }
     }
 
@@ -141,7 +145,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         }
         catch (Exception ex)
         {
-            throw new ServiceUnavailableException("Serviço temporariamente indisponível. Tente novamente mais tarde.", ex);
+            throw new ServiceUnavailableException(ErrorMessages.Error_ServiceUnavailable, ex);
         }
     }
 

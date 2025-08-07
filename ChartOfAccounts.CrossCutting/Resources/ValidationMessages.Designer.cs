@@ -70,6 +70,15 @@ namespace ChartOfAccounts.CrossCutting.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to O código {0} não foi encontrado..
+        /// </summary>
+        public static string Validation_ChartOfAccounts_CodeNotFound {
+            get {
+                return ResourceManager.GetString("Validation_ChartOfAccounts_CodeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to O código {0} não existe ou não é um código pai válido..
         /// </summary>
         public static string Validation_ChartOfAccounts_InvalidParentCode {
