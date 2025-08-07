@@ -21,11 +21,13 @@ public class AccountsController : ControllerBase
 
     private readonly IChartOfAccountsService _service;
     private readonly IRequestContext _requestContext;
+    private readonly IChartOfAccountFactory _chartOfAccount;
 
-    public AccountsController(IChartOfAccountsService service, IRequestContext requestContext)
+    public AccountsController(IChartOfAccountsService service, IRequestContext requestContext, IChartOfAccountFactory chartOfAccount)
     {
         _service = service;
         _requestContext = requestContext;
+        _chartOfAccount = chartOfAccount;
     }
 
     [HttpGet]
@@ -66,9 +68,9 @@ public class AccountsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] ChartOfAccountCreateDto model, IChartOfAccountFactory chartOfAccount)
+    public async Task<IActionResult> Create([FromBody] ChartOfAccountCreateDto model)
     {
-        ChartOfAccount account = chartOfAccount.Create(model, _requestContext);
+        ChartOfAccount account = _chartOfAccount.Create(model, _requestContext);
 
         await _service.CreateAsync(account);
 
