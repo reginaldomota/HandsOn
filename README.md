@@ -24,7 +24,7 @@ A aplicação gerencia contas contábeis com os seguintes atributos:
 ### 🔍 APIs disponíveis
 
 A aplicação expõe um conjunto de endpoints RESTful organizados por grupos:
-
+8
 #### 🔐 Autenticação JWT
 
 * **POST** `/api/v1/auth/token` — Geração de token JWT com base nas credenciais informadas.
@@ -71,12 +71,12 @@ Guia prático para subir containers PostgreSQL, pgAdmin e uma aplicação ASP.NE
 
 * [📊 Introdução ao Projeto Plano de Contas](#introdução-ao-projeto-plano-de-contas)
 * [✅ Pré-requisitos](#pré-requisitos)
-* [📦 1. Baixar imagens Docker](#1-baixar-imagens-docker)
-* [🌐 2. Criar rede Docker](#2-criar-rede-docker)
+* [📁 1. Clonar o repositório do projeto](#1-clonar-o-repositório-do-projeto)
+* [📦 2. Baixar imagens Docker](#2-baixar-imagens-docker)
 * [🐘 3. Executar PostgreSQL](#3-executar-postgresql)
 * [🛀️ 4. Criar arquivo servers.json](#4-criar-arquivo-serversjson)
 * [💻 5. Executar pgAdmin](#5-executar-pgadmin)
-* [🧪 6. Build e execução do projeto HandsOn](#6-build-e-execucao-do-projeto-handson)
+* [🔧 6. Build e execução da API](#6-build-e-execução-da-api)
 * [📘️ 7. Criar estrutura de plano de contas](#7-criar-estrutura-de-plano-de-contas)
 * [🗕️ 8. Inserir dados iniciais](#8-inserir-dados-iniciais)
 * [🌍 9. Acessar pgAdmin](#9-acessar-pgadmin)
@@ -85,7 +85,78 @@ Guia prático para subir containers PostgreSQL, pgAdmin e uma aplicação ASP.NE
 
 ---
 
-## 📦 1. Baixar imagens Docker
+## 📁 1. Clonar o repositório do projeto
+
+### 📁 Clonar repositório
+
+```bash
+git clone https://github.com/reginaldomota/HandsOn.git
+cd HandsOn
+```
+
+> **O que está acontecendo:** Clonamos o repositório que contém o código-fonte da API de Plano de Contas e navegamos para o diretório do projeto. Este código contém uma aplicação ASP.NET Core que implementa os endpoints RESTful para gerenciar o plano de contas.
+
+### 💡 Dockerfile incluído no repositório
+
+> Já está presente em `HandsOn/Dockerfile` com configuração pronta:
+
+```dockerfile
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:8080
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY ["ChartOfAccounts.Api.csproj", "."]
+RUN dotnet restore "ChartOfAccounts.Api.csproj"
+COPY . .
+RUN dotnet build "ChartOfAccounts.Api.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "ChartOfAccounts.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+COPY appsettings.json .
+ENTRYPOINT ["dotnet", "ChartOfAccounts.Api.dll"]
+```
+
+### 🔧 Build da imagem
+
+```bash
+docker build -t hands-on-api .
+```
+> **O que está acontecendo:** Estamos criando uma imagem Docker para nossa API usando o Dockerfile presente no diretório. O parâmetro `-t hands-on-api` attribui um nome ("tag") à imagem para facilitar sua referência posteriormente. O ponto final (`.`) indica que o Dockerfile está no diretório atual.
+
+### 🌐 Criar rede Docker
+
+```bash
+docker network create container_network
+```
+
+> **O que está acontecendo:** Estamos criando uma rede Docker dedicada chamada `container_network`. Esta rede permite que os containers se comuniquem entre si usando nomes como hostnames, em vez de endereços IP. Isso é essencial para que o pgAdmin consiga se conectar ao PostgreSQL e para que nossa API acesse o banco de dados usando nomes de hosts consistentes.
+
+
+### ▶️ Executar o container
+
+```bash
+docker run -d -p 8080:8080 --network container_network --name hands-on-container hands-on-api
+```
+
+> **O que está acontecendo:** Este comando cria e executa um container com nossa API:
+> - `-d`: Executa o container em segundo plano
+> - `-p 8080:8080`: Mapeia a porta 8080 do container para a mesma porta no host
+> - `--network container_network`: Conecta o container à mesma rede do PostgreSQL e pgAdmin
+> - `--name hands-on-container`: Define um nome para o container
+> - `hands-on-api`: Usa a imagem que acabamos de criar
+>
+> Agora nossa API está rodando e pode se comunicar com o banco de dados PostgreSQL.
+
+---
+
+## 📦 2. Baixar imagens Docker
 
 ```bash
 docker pull postgres
@@ -93,16 +164,6 @@ docker pull dpage/pgadmin4
 ```
 
 > **O que está acontecendo:** Estamos baixando as imagens oficiais do PostgreSQL e pgAdmin do Docker Hub. Essas imagens contêm o software pré-configurado que utilizaremos para criar os containers. Baixar as imagens antes de executar os containers garante uma inicialização mais rápida e evita problemas de conectividade durante a criação dos containers.
-
----
-
-## 🌐 2. Criar rede Docker
-
-```bash
-docker network create container_network
-```
-
-> **O que está acontecendo:** Estamos criando uma rede Docker dedicada chamada `container_network`. Esta rede permite que os containers se comuniquem entre si usando nomes como hostnames, em vez de endereços IP. Isso é essencial para que o pgAdmin consiga se conectar ao PostgreSQL e para que nossa API acesse o banco de dados usando nomes de hosts consistentes.
 
 ---
 
@@ -158,13 +219,13 @@ Salve no mesmo diretório onde você ira rodar o pgAdmin.
 ### 💼 Linux/macOS:
 
 ```bash
-docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="user@yourmail.com" -e PGADMIN_DEFAULT_PASSWORD="user1234" -v "$(pwd)/postgres_server.json":/pgadmin4/servers.json -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
+docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="user@yourmail.com" -e PGADMIN_DEFAULT_PASSWORD="user1234" -v "$(pwd)/Scripts/postgres_server.json":/pgadmin4/servers.json -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
 ```
 
 ### 🪠 Windows PowerShell:
 
 ```powershell
-docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="user@yourmail.com" -e PGADMIN_DEFAULT_PASSWORD="user1234" -v "${PWD}\postgres_server.json:/pgadmin4/servers.json" -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
+docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="user@yourmail.com" -e PGADMIN_DEFAULT_PASSWORD="user1234" -v "${PWD}\Scripts\postgres_server.json:/pgadmin4/servers.json" -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
 ```
 
 > **O que está acontecendo:** Este comando cria e inicia um container pgAdmin com as seguintes características:
@@ -178,65 +239,15 @@ docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFA
 
 ---
 
-## 🧪 6. Build e execução do projeto `HandsOn`
+## 🔧 6. Build e execução da API
 
-### 📁 Clonar repositório
-
-```bash
-git clone https://github.com/reginaldomota/HandsOn.git
-cd HandsOn
-```
-
-> **O que está acontecendo:** Clonamos o repositório que contém o código-fonte da API de Plano de Contas e navegamos para o diretório do projeto. Este código contém uma aplicação ASP.NET Core que implementa os endpoints RESTful para gerenciar o plano de contas.
-
-### 💡 Dockerfile incluído no repositório
-
-> Já está presente em `HandsOn/Dockerfile` com configuração pronta:
-
-```dockerfile
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 8080
-ENV ASPNETCORE_URLS=http://+:8080
-
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
-COPY ["ChartOfAccounts.Api.csproj", "."]
-RUN dotnet restore "ChartOfAccounts.Api.csproj"
-COPY . .
-RUN dotnet build "ChartOfAccounts.Api.csproj" -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish "ChartOfAccounts.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-COPY appsettings.json .
-ENTRYPOINT ["dotnet", "ChartOfAccounts.Api.dll"]
-```
-
-### 🔧 Build da imagem
+Após a construção da imagem da API, certifique-se de que o container esteja em execução:
 
 ```bash
-docker build -t hands-on-api .
-```
-> **O que está acontecendo:** Estamos criando uma imagem Docker para nossa API usando o Dockerfile presente no diretório. O parâmetro `-t hands-on-api` attribui um nome ("tag") à imagem para facilitar sua referência posteriormente. O ponto final (`.`) indica que o Dockerfile está no diretório atual.
-
-### ▶️ Executar o container
-
-```bash
-docker run -d -p 8080:8080 --network container_network --name hands-on-container hands-on-api
+docker start hands-on-container
 ```
 
-> **O que está acontecendo:** Este comando cria e executa um container com nossa API:
-> - `-d`: Executa o container em segundo plano
-> - `-p 8080:8080`: Mapeia a porta 8080 do container para a mesma porta no host
-> - `--network container_network`: Conecta o container à mesma rede do PostgreSQL e pgAdmin
-> - `--name hands-on-container`: Define um nome para o container
-> - `hands-on-api`: Usa a imagem que acabamos de criar
->
-> Agora nossa API está rodando e pode se comunicar com o banco de dados PostgreSQL.
+> **O que está acontecendo:** Estamos iniciando o container da API caso ele esteja parado. Isso é útil para retomar o trabalho sem precisar recriar o container.
 
 ---
 
@@ -356,14 +367,4 @@ Para utilizar a API, você precisa primeiro obter um token JWT usando um dos tr�
 
 Agora todas as suas requisições serão autenticadas e os dados serão filtrados pelo tenant especificado.
 
-> **O que está acontecendo:** A API implementa um sistema de autenticação baseado em JWT (JSON Web Token) com multitenancy. Ao autenticar com um tenant específico, você terá acesso apenas aos dados desse tenant. Isso permite que a mesma API seja usada por diferentes organizações ou departamentos sem que eles vejam os dados uns dos outros.
-
----
-
-# Response
-```json
-{
-  "accessToken": "seu token",
-  "tokenType": "Bearer",
-  "exp": 0000000000
-}
+> **O que está acontecendo:** A API implementa um sistema de autenticação baseado em JWT (JSON Web Token) com multitenancy. Ao autenticar com um tenant específico, você terá acesso apenas aos dados desse tenant. Isso permite que a mesma API seja usada por diferentes organizações ou departamentos sempre
