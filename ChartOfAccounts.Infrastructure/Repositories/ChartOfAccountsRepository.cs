@@ -7,6 +7,7 @@ using ChartOfAccounts.Infrastructure.Extensions;
 using ChartOfAccounts.Infrastructure.Factories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using System.Net;
 
 namespace ChartOfAccounts.Infrastructure.Repositories;
 
@@ -109,11 +110,17 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         try
         {
             ChartOfAccount? entity = await GetByCodeAsync(code);
-            if (entity != null)
-            {
-                _context.ChartOfAccounts.Remove(entity);
-                await _context.SaveChangesAsync();
-            }
+
+            if (entity == null)
+                throw new ErrorHttpRequestException($"O código {code} não foi encontrado", (int)HttpStatusCode.NotFound, Domain.Enums.ErrorCode.NotFound);
+
+            _context.ChartOfAccounts.Remove(entity);
+            await _context.SaveChangesAsync();
+            
+        }
+        catch (ErrorHttpRequestException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
