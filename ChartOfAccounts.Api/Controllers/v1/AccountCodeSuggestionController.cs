@@ -1,4 +1,5 @@
-﻿using ChartOfAccounts.Application.Interfaces;
+﻿using ChartOfAccounts.Application.DTOs.ChartOfAccounts;
+using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.CrossCutting.Resources;
 using ChartOfAccounts.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,6 @@ public class AccountCodeSuggestionController : ControllerBase
                 Message = ErrorMessages.Error_ChartOfAccounts_Suggestion_LimitReached
             });
 
-        return Ok(suggestion);
+        return Ok(new AccountCodeSuggestionResponseDto { SuggestedCode = suggestion }); 
     }
 }
