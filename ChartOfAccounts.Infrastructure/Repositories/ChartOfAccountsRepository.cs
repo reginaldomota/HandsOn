@@ -40,10 +40,11 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
                 query = query.Where(a => a.IsPostable == isPostable.Value);
             }
 
-            int totalCount = await query.CountAsync();
+            IQueryable<ChartOfAccount> tenantQuery = query.ForCurrentTenant();
 
-            List<ChartOfAccount> items = await query
-                .ForCurrentTenant()
+            int totalCount = await tenantQuery.CountAsync();
+
+            List<ChartOfAccount> items = await tenantQuery
                 .OrderBy(a => a.Code)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
