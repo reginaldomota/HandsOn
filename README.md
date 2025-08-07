@@ -82,6 +82,7 @@ Guia prático para subir containers PostgreSQL, pgAdmin e uma aplicação ASP.NE
 * [🌍 9. Acessar pgAdmin](#9-acessar-pgadmin)
 * [🔗 10. Acessar Swagger da API](#10-acessar-swagger-da-api)
 * [🔑 11. Autenticando na API](#11-autenticando-na-api)
+* [🧪 12. Utilizando a coleção Postman](#12-utilizando-a-coleção-postman)
 
 ---
 
@@ -118,8 +119,8 @@ RUN dotnet publish "ChartOfAccounts.Api.csproj" -c Release -o /app/publish /p:Us
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
-COPY appsettings.json .
+COPY --from=publish /app/publish . 
+COPY appsettings.json . 
 ENTRYPOINT ["dotnet", "ChartOfAccounts.Api.dll"]
 ```
 
@@ -368,3 +369,31 @@ Para utilizar a API, você precisa primeiro obter um token JWT usando um dos tr�
 Agora todas as suas requisições serão autenticadas e os dados serão filtrados pelo tenant especificado.
 
 > **O que está acontecendo:** A API implementa um sistema de autenticação baseado em JWT (JSON Web Token) com multitenancy. Ao autenticar com um tenant específico, você terá acesso apenas aos dados desse tenant. Isso permite que a mesma API seja usada por diferentes organizações ou departamentos sempre
+
+---
+
+## 🧪 12. Utilizando a coleção Postman
+
+Para facilitar o teste da API fora do Swagger, disponibilizamos uma coleção Postman pronta para uso:
+
+📄 [`Plano de Contas.postman_collection.json`](Scripts/Plano%20de%20Contas.postman_collection.json)
+
+### Importando a coleção no Postman:
+
+1. Baixe o arquivo da coleção Postman do diretório `Scripts` do projeto
+2. Abra o Postman
+3. Clique em "Import" no canto superior esquerdo
+4. Arraste o arquivo baixado ou navegue até ele
+5. Clique em "Import" para confirmar
+
+### Utilizando a coleção:
+
+A coleção está organizada com todas as operações disponíveis na API:
+
+1. **Autenticação**: Primeiro execute a requisição "Get Token" para obter o token JWT
+2. **Consultas**: Explore os endpoints GET para listar e filtrar contas
+3. **Operações**: Utilize os endpoints POST e DELETE para criar e remover contas
+
+> **O que está acontecendo:** O Postman é uma ferramenta poderosa para testar APIs RESTful. Com a coleção pré-configurada, você pode testar rapidamente todos os endpoints da API sem precisar configurar manualmente cada requisição. Os parâmetros, headers e corpos de requisição já estão configurados, facilitando o teste e a exploração da API.
+
+> **Dica:** A coleção já está configurada para capturar e reutilizar o token JWT automaticamente nas requisições subsequentes. Após executar a requisição de autenticação, as demais requisições usarão o token obtido.
