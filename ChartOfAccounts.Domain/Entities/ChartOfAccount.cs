@@ -29,6 +29,7 @@ public class ChartOfAccount : ITenantEntity
     [Required(ErrorMessage = "O campo 'É Lançável' é obrigatório.")]
     public bool? IsPostable { get; set; }
 
+    [Required(ErrorMessage = "O nome é obrigatório.")]
     [StringLength(1024, ErrorMessage = "O código do pai deve ter no máximo {1} caracteres.")]
     public string? ParentCode { get; set; }
 
