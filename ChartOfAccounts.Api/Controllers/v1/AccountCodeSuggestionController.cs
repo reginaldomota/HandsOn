@@ -29,7 +29,7 @@ public class AccountCodeSuggestionController : ControllerBase
             {
                 StatusCode = (int)HttpStatusCode.NotFound,
                 ErrorCode = Domain.Enums.ErrorCode.NotFound.ToString(),
-                Message = "Não foi possível sugerir um próximo código."
+                Message = "Não foi possível sugerir um próximo código. Limite atingido"
             });
 
         return Ok(suggestion);

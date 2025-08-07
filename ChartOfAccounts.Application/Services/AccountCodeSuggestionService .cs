@@ -1,5 +1,6 @@
 ﻿using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Domain.Entities;
+using ChartOfAccounts.Domain.Exceptions;
 using ChartOfAccounts.Domain.Interfaces;
 
 namespace ChartOfAccounts.Application.Services;
@@ -20,10 +21,10 @@ public class AccountCodeSuggestionService : IAccountCodeSuggestionService
         bool? isPostable = await _repository.IsPostableAsync(parentCode);
         
         if (isPostable is null)
-            throw new InvalidOperationException($"O código {parentCode} não existe ou não é um código pai válido."); //todo criar excessao customizada e consumir no middleware. criar resource
+            throw new BusinessRuleValidationException($"O código {parentCode} não existe ou não é um código pai válido."); //todo criar excessao customizada e consumir no middleware. criar resource
 
         if (isPostable == true)
-            throw new InvalidOperationException($"O código {parentCode} não aceita contas filhas pois ele permite lançamentos."); //todo criar excessao customizada e consumir no middleware
+            throw new BusinessRuleValidationException($"O código {parentCode} não aceita contas filhas pois ele permite lançamentos."); //todo criar excessao customizada e consumir no middleware
 
         var parentLevel = parentCode.Split('.').Length;
         return await SuggestNextCodeRecursiveAsync(parentCode, parentLevel);
