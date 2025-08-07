@@ -1,3 +1,5 @@
+truncate "ChartOfAccounts";
+
 INSERT INTO "ChartOfAccounts" ("Code", "Name", "Type", "IsPostable", "ParentCode", "CreatedAt", "UpdatedAt", "CodeNormalized"
 , "IdempotencyKey", "RequestId", "TenantId") 
 VALUES (

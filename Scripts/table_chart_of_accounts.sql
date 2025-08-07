@@ -1,3 +1,5 @@
+drop table "ChartOfAccounts";
+
 CREATE TABLE "ChartOfAccounts" (
     "Id" SERIAL PRIMARY KEY,
     "IdempotencyKey" UUID NOT NULL,
