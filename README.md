@@ -158,13 +158,13 @@ Salve no mesmo diretório onde você ira rodar o pgAdmin.
 ### 💼 Linux/macOS:
 
 ```bash
-docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="reginaldomotacc@gmail.com" -e PGADMIN_DEFAULT_PASSWORD="rm1234" -v "$(pwd)/servers.json":/pgadmin4/servers.json -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
+docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="user@yourmail.com" -e PGADMIN_DEFAULT_PASSWORD="user1234" -v "$(pwd)/servers.json":/pgadmin4/servers.json -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
 ```
 
 ### 🪠 Windows PowerShell:
 
 ```powershell
-docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="reginaldomotacc@gmail.com" -e PGADMIN_DEFAULT_PASSWORD="rm1234" -v "${PWD}\servers.json:/pgadmin4/servers.json" -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
+docker run --name pgadmin --network container_network -p 8090:80 -e PGADMIN_DEFAULT_EMAIL="user@yourmail.com" -e PGADMIN_DEFAULT_PASSWORD="user1234" -v "${PWD}\servers.json:/pgadmin4/servers.json" -e PGADMIN_SERVER_JSON_FILE="/pgadmin4/servers.json" -d dpage/pgadmin4
 ```
 
 > **O que está acontecendo:** Este comando cria e inicia um container pgAdmin com as seguintes características:
