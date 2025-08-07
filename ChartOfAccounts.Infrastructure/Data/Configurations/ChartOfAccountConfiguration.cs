@@ -12,19 +12,26 @@ public class ChartOfAccountConfiguration : IEntityTypeConfiguration<ChartOfAccou
 
         builder.HasKey(x => x.Id);
 
-        builder.HasIndex(x => x.Code).IsUnique();
+        // Update unique indexes to match the SQL schema
+        builder.HasIndex(x => new { x.TenantId, x.Code }).IsUnique();
+        builder.HasIndex(x => new { x.TenantId, x.IdempotencyKey }).IsUnique();
+        
+        // Regular indexes
+        builder.HasIndex(x => x.Code);
+        builder.HasIndex(x => x.Name);
         builder.HasIndex(x => x.CodeNormalized);
         builder.HasIndex(x => x.Type);
         builder.HasIndex(x => x.ParentCode);
+        builder.HasIndex(x => x.IsPostable);
         builder.HasIndex(x => x.TenantId); 
 
         builder.Property(x => x.Code)
                .IsRequired()
-               .HasMaxLength(25);
+               .HasMaxLength(1024);
 
         builder.Property(x => x.CodeNormalized)
                .IsRequired()
-               .HasMaxLength(25);
+               .HasMaxLength(1024);
 
         builder.Property(x => x.Name)
                .IsRequired()
@@ -38,13 +45,15 @@ public class ChartOfAccountConfiguration : IEntityTypeConfiguration<ChartOfAccou
                .IsRequired();
 
         builder.Property(x => x.ParentCode)
-               .HasMaxLength(255);
+               .HasMaxLength(1024);
 
         builder.Property(x => x.CreatedAt)
-               .IsRequired();
+               .IsRequired()
+               .HasDefaultValueSql("now()");
 
         builder.Property(x => x.UpdatedAt)
-               .IsRequired();
+               .IsRequired()
+               .HasDefaultValueSql("now()");
 
         builder.Property(x => x.IdempotencyKey)
                .IsRequired();
