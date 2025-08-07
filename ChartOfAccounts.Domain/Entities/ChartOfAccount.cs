@@ -11,7 +11,7 @@ public class ChartOfAccount : ITenantEntity
     public Guid? IdempotencyKey { get; set; }
 
     [Required(ErrorMessage = "O código é obrigatório.")]
-    [StringLength(10, ErrorMessage = "O código deve ter no máximo {1} caracteres.")]
+    [StringLength(1024, ErrorMessage = "O código deve ter no máximo {1} caracteres.")]
     public string? Code { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O nome é obrigatório.")]
