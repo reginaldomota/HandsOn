@@ -21,16 +21,30 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
         _context = contextFactory.CreateDbContext();
     }
 
-    public async Task<(List<ChartOfAccount> Items, int TotalCount)> GetPagedAsync(int page, int pageSize)
+    public async Task<(List<ChartOfAccount> Items, int TotalCount)> GetPagedAsync(int page, int pageSize, string? find = null, bool? isPostable = null)
     {
         try
         {
-            IQueryable<ChartOfAccount> query = _context.ChartOfAccounts.OrderBy(x => x.CodeNormalized);
+            IQueryable<ChartOfAccount> query = _context.ChartOfAccounts;
+
+            if (!string.IsNullOrWhiteSpace(find))
+            {
+                string findLower = find.ToLowerInvariant();
+                query = query.Where(a =>
+                    a.Code.ToLower().Contains(findLower) ||
+                    a.Name.ToLower().Contains(findLower));
+            }
+
+            if (isPostable.HasValue)
+            {
+                query = query.Where(a => a.IsPostable == isPostable.Value);
+            }
 
             int totalCount = await query.CountAsync();
 
             List<ChartOfAccount> items = await query
                 .ForCurrentTenant()
+                .OrderBy(a => a.Code)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

@@ -31,11 +31,13 @@ public class AccountsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<PaginatedResultDto<ChartOfAccountResponseDto>>> GetAll(
         [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20)
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? find = null,
+        [FromQuery] bool? isPostable = null)
     {
-        var paged = await _service.GetPagedAsync(page, pageSize);
+        PaginatedResultDto<ChartOfAccount> paged = await _service.GetPagedAsync(page, pageSize, find, isPostable);
 
-        var response = new PaginatedResultDto<ChartOfAccountResponseDto>
+        PaginatedResultDto<ChartOfAccountResponseDto> response = new PaginatedResultDto<ChartOfAccountResponseDto>
         {
             Page = paged.Page,
             PageSize = paged.PageSize,

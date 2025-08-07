@@ -4,7 +4,7 @@ namespace ChartOfAccounts.Domain.Interfaces;
 
 public interface IChartOfAccountsRepository
 {
-    Task<(List<ChartOfAccount> Items, int TotalCount)> GetPagedAsync(int page, int pageSize);
+    Task<(List<ChartOfAccount> Items, int TotalCount)> GetPagedAsync(int page, int pageSize, string? find = null, bool? isPostable = null);
     Task<ChartOfAccount?> GetByCodeAsync(string code);
     Task<ChartOfAccount?> GetByIdempotencyKeyAsync(Guid idempotencyKey);
     Task<bool?> IsPostableAsync(string code);

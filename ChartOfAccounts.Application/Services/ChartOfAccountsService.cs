@@ -20,16 +20,16 @@ public class ChartOfAccountsService : IChartOfAccountsService
         _repository = repository;
     }
 
-    public async Task<PaginatedResultDto<ChartOfAccount>> GetPagedAsync(int page, int pageSize)
+    public async Task<PaginatedResultDto<ChartOfAccount>> GetPagedAsync(int page, int pageSize, string? find = null, bool? isPostable = null)
     {
-        var (items, totalCount) = await _repository.GetPagedAsync(page, pageSize);
+        (List<ChartOfAccount> items, int totalCount) = await _repository.GetPagedAsync(page, pageSize, find, isPostable);
 
         return new PaginatedResultDto<ChartOfAccount>
         {
-            Items = items,
-            TotalCount = totalCount,
             Page = page,
-            PageSize = pageSize
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            Items = items
         };
     }
 
