@@ -61,6 +61,15 @@ namespace ChartOfAccounts.CrossCutting.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Houve um conflito entre a nova tentativa e o estado previamente registrado para o Idempotency-Key {0}..
+        /// </summary>
+        public static string Error_ChartOfAccounts_IdempotencyConflict {
+            get {
+                return ResourceManager.GetString("Error_ChartOfAccounts_IdempotencyConflict", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to O código {0} não foi encontrado..
         /// </summary>
         public static string Error_ChartOfAccounts_NotFound {

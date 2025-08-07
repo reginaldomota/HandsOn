@@ -7,6 +7,7 @@ using ChartOfAccounts.Domain.Exceptions;
 using ChartOfAccounts.Domain.Interfaces;
 using ChartOfAccounts.Domain.Services;
 using System.Net;
+using ChartOfAccounts.CrossCutting.Resources;
 
 namespace ChartOfAccounts.Application.Services;
 
@@ -41,10 +42,12 @@ public class ChartOfAccountsService : IChartOfAccountsService
             bool? isPostable = await _repository.IsPostableAsync(account.ParentCode!);
 
             if (isPostable is null)
-                throw new BusinessRuleValidationException($"O código {account.ParentCode!} não existe ou não é um código pai válido.");
+                throw new BusinessRuleValidationException(
+                    string.Format(ValidationMessages.Validation_ChartOfAccounts_InvalidParentCode, account.ParentCode));
 
             if (isPostable == true)
-                throw new BusinessRuleValidationException($"O código {account.ParentCode!} não aceita contas filhas pois ele permite lançamentos.");
+                throw new BusinessRuleValidationException(
+                    string.Format(ValidationMessages.Validation_ChartOfAccounts_ParentIsPostable, account.ParentCode));
 
             await _repository.CreateAsync(account);
         }
@@ -58,12 +61,14 @@ public class ChartOfAccountsService : IChartOfAccountsService
                 return;
 
             if (chekAccount != null)
-                throw new BusinessRuleValidationException($"O código {account.Code} já existe.", ex);
+                throw new BusinessRuleValidationException(
+                    string.Format(ValidationMessages.Validation_ChartOfAccounts_CodeAlreadyExists, account.Code), ex);
 
             chekAccount = await _repository.GetByIdempotencyKeyAsync(account.IdempotencyKey);
 
             if (chekAccount != null)
-                throw new ErrorHttpRequestException($"houve um conflito entre a nova tentativa e o estado previamente registrado para o Idempotency-Key {account.IdempotencyKey}", ex, (int)HttpStatusCode.Conflict, ErrorCode.Conflict);
+                throw new ErrorHttpRequestException(
+                    string.Format(ErrorMessages.Error_ChartOfAccounts_IdempotencyConflict, account.IdempotencyKey), ex, (int)HttpStatusCode.Conflict, ErrorCode.Conflict);
 
             throw new ErrorHttpRequestException(ex.Message, ex, ex.StatusCode, ex.ErrorCode);
         }

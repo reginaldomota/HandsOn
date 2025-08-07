@@ -59,5 +59,32 @@ namespace ChartOfAccounts.CrossCutting.Resources {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to O código {0} já existe..
+        /// </summary>
+        public static string Validation_ChartOfAccounts_CodeAlreadyExists {
+            get {
+                return ResourceManager.GetString("Validation_ChartOfAccounts_CodeAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to O código {0} não existe ou não é um código pai válido..
+        /// </summary>
+        public static string Validation_ChartOfAccounts_InvalidParentCode {
+            get {
+                return ResourceManager.GetString("Validation_ChartOfAccounts_InvalidParentCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to O código {0} não aceita contas filhas pois ele permite lançamentos..
+        /// </summary>
+        public static string Validation_ChartOfAccounts_ParentIsPostable {
+            get {
+                return ResourceManager.GetString("Validation_ChartOfAccounts_ParentIsPostable", resourceCulture);
+            }
+        }
     }
 }
