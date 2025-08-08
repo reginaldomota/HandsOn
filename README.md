@@ -49,7 +49,6 @@ O projeto segue os princípios da **Arquitetura Limpa (Clean Architecture)** pro
 
 - **Dependency Inversion**: As dependências fluem de fora para dentro
 - **Repository Pattern**: Abstração da camada de dados
-- **CQRS**: Separação de responsabilidades entre comandos e consultas
 - **Chain of Responsibility**: Encadeamento de responsabilidades para processar requisições
 
 ### Modelo de dados:
