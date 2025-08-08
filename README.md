@@ -51,7 +51,7 @@ O projeto segue os princípios da **Arquitetura Limpa (Clean Architecture)** pro
 - **Repository Pattern**: Abstração da camada de dados
 - **CQRS**: Separação de responsabilidades entre comandos e consultas
 - **Mediator**: Comunicação entre componentes sem acoplamento direto
-- **Unit of Work**: Gerenciamento de transações e mudanças de estado
+- **Chain of Responsibility**: Encadeamento de responsabilidades para processar requisições
 
 ### Modelo de dados:
 
