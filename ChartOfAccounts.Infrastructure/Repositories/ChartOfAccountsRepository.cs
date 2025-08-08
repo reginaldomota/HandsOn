@@ -46,7 +46,7 @@ public class ChartOfAccountsRepository : IChartOfAccountsRepository
             int totalCount = await tenantQuery.CountAsync();
 
             List<ChartOfAccount> items = await tenantQuery
-                .OrderBy(a => a.Code)
+                .OrderBy(a => a.CodeNormalized)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
