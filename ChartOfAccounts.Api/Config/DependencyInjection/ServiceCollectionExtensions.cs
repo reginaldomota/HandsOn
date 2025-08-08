@@ -3,6 +3,8 @@ using ChartOfAccounts.Application.Errors.Converters;
 using ChartOfAccounts.Application.Errors.Converters.Interfaces;
 using ChartOfAccounts.Application.Errors.Interfaces;
 using ChartOfAccounts.Application.Factories;
+using ChartOfAccounts.Application.Handlers.ChartOfAccounts;
+using ChartOfAccounts.Application.Handlers.ChartOfAccounts.Exceptions;
 using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Application.Services;
 using ChartOfAccounts.CrossCutting.Context;
@@ -29,8 +31,25 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IErrorResponseConverter, ErrorHttpRequestConverter>();
         services.AddSingleton<IErrorResponseConverter, DefaultExceptionConverter>();
 
+        services.AddScoped<IDeleteValidationHandler, ChildrenValidationHandler>();
+        services.AddScoped<IDeleteValidationChainBuilder, DeleteValidationChainBuilder>();
+
+        services.AddScoped<MaxLevelValidationHandler>();
+        services.AddScoped<ParentCodeValidationHandler>();
+        services.AddScoped<ParentExistenceValidationHandler>();
+        services.AddScoped<ParentPostableValidationHandler>();
+        services.AddScoped<ParentTypeValidationHandler>();
+        services.AddScoped<ICreateValidationChainBuilder, CreateValidationChainBuilder>();
+
         // Factories
         services.AddScoped<IChartOfAccountFactory, ChartOfAccountFactory>();
+
+        // Registro dos handlers de exceção
+        services.AddScoped<IdempotencyMatchHandler>();
+        services.AddScoped<CodeExistsHandler>();
+        services.AddScoped<IdempotencyConflictHandler>();
+        services.AddScoped<DefaultExceptionHandler>();
+        services.AddScoped<IExceptionHandlerChainBuilder, ExceptionHandlerChainBuilder>();
 
         return services;
     }
@@ -68,3 +87,4 @@ public static class ServiceCollectionExtensions
         return services;
     }
 }
+
