@@ -1,4 +1,4 @@
-namespace ChartOfAccounts.Application.Handlers.ChartOfAccounts;
+namespace ChartOfAccounts.Application.Handlers.ChartOfAccounts.Interfaces;
 
 public interface IDeleteValidationHandler
 {

@@ -1,4 +1,6 @@
 using ChartOfAccounts.Application.Services;
+using ChartOfAccounts.Application.Handlers.ChartOfAccounts;
+using ChartOfAccounts.Application.Handlers.ChartOfAccounts.Exceptions;
 using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Interfaces;
 using ChartOfAccounts.Domain.Exceptions;
@@ -6,6 +8,10 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using System.ComponentModel.DataAnnotations;
+using ChartOfAccounts.Application.Handlers.ChartOfAccounts.Interfaces;
+using ChartOfAccounts.Application.Handlers.ChartOfAccounts.Exceptions.Interfaces;
+using ChartOfAccounts.Application.DTOs.Common;
+using ChartOfAccounts.Domain.Enums;
 
 namespace ChartOfAccounts.Tests.Application.Services;
 
@@ -13,21 +19,32 @@ namespace ChartOfAccounts.Tests.Application.Services;
 public class ChartOfAccountsServiceTests
 {
     private Mock<IChartOfAccountsRepository> _repositoryMock;
+    private Mock<IDeleteValidationChainBuilder> _deleteValidationChainBuilderMock;
+    private Mock<ICreateValidationChainBuilder> _createValidationChainBuilderMock;
+    private Mock<IExceptionHandlerChainBuilder> _exceptionHandlerChainBuilderMock;
     private ChartOfAccountsService _service;
 
     [SetUp]
     public void Setup()
     {
         _repositoryMock = new Mock<IChartOfAccountsRepository>();
-        _service = new ChartOfAccountsService(_repositoryMock.Object);
+        _deleteValidationChainBuilderMock = new Mock<IDeleteValidationChainBuilder>();
+        _createValidationChainBuilderMock = new Mock<ICreateValidationChainBuilder>();
+        _exceptionHandlerChainBuilderMock = new Mock<IExceptionHandlerChainBuilder>();
+
+        _service = new ChartOfAccountsService(
+            _repositoryMock.Object,
+            _deleteValidationChainBuilderMock.Object,
+            _createValidationChainBuilderMock.Object,
+            _exceptionHandlerChainBuilderMock.Object);
     }
 
     [Test]
     public async Task GetByCodeAsync_WhenCodeExists_ShouldReturnAccount()
     {
         // Arrange
-        var code = "1.01.01";
-        var expectedAccount = new ChartOfAccount
+        String code = "1.01.01";
+        ChartOfAccount expectedAccount = new ChartOfAccount
         {
             Code = code,
             Name = "Teste",
@@ -43,7 +60,7 @@ public class ChartOfAccountsServiceTests
             .ReturnsAsync(expectedAccount);
 
         // Act
-        var result = await _service.GetByCodeAsync(code);
+        ChartOfAccount result = await _service.GetByCodeAsync(code);
 
         // Assert
         result.Should().NotBeNull();
@@ -55,12 +72,12 @@ public class ChartOfAccountsServiceTests
     public async Task GetByCodeAsync_WhenCodeDoesNotExist_ShouldReturnNull()
     {
         // Arrange
-        var nonExistentCode = "9.99.99";
+        String nonExistentCode = "9.99.99";
         _repositoryMock.Setup(repo => repo.GetByCodeAsync(nonExistentCode))
             .ReturnsAsync((ChartOfAccount)null);
 
         // Act
-        var result = await _service.GetByCodeAsync(nonExistentCode);
+        ChartOfAccount result = await _service.GetByCodeAsync(nonExistentCode);
 
         // Assert
         result.Should().BeNull();
@@ -71,7 +88,7 @@ public class ChartOfAccountsServiceTests
     public async Task CreateAsync_WithValidAccount_ShouldCallRepository()
     {
         // Arrange
-        var account = new ChartOfAccount
+        ChartOfAccount account = new ChartOfAccount
         {
             Code = "1.01.02",
             Name = "Teste",
@@ -83,8 +100,8 @@ public class ChartOfAccountsServiceTests
             IdempotencyKey = Guid.NewGuid()
         };
 
-        _repositoryMock.Setup(repo => repo.IsPostableAsync(It.IsAny<string>()))
-            .ReturnsAsync(false);
+        _createValidationChainBuilderMock.Setup(builder => 
+            builder.ValidateAsync(account)).Returns(Task.CompletedTask);
         
         _repositoryMock.Setup(repo => repo.CreateAsync(account))
             .Returns(Task.CompletedTask);
@@ -93,6 +110,8 @@ public class ChartOfAccountsServiceTests
         await _service.CreateAsync(account);
 
         // Assert
+        _createValidationChainBuilderMock.Verify(builder => 
+            builder.ValidateAsync(account), Times.Once);
         _repositoryMock.Verify(repo => repo.CreateAsync(account), Times.Once);
     }
 
@@ -100,12 +119,16 @@ public class ChartOfAccountsServiceTests
     public void CreateAsync_WithInvalidAccount_ShouldThrowValidationException()
     {
         // Arrange
-        var account = new ChartOfAccount
+        ChartOfAccount account = new ChartOfAccount
         {
             // Missing required fields
-            Code = string.Empty,
-            Name = string.Empty
+            Code = String.Empty,
+            Name = String.Empty
         };
+
+        _createValidationChainBuilderMock.Setup(builder => 
+            builder.ValidateAsync(account))
+            .ThrowsAsync(new ValidationException("Validation failed"));
 
         // Act & Assert
         Func<Task> action = async () => await _service.CreateAsync(account);
@@ -116,20 +139,20 @@ public class ChartOfAccountsServiceTests
     public async Task GetPagedAsync_ShouldReturnPaginatedResults()
     {
         // Arrange
-        int page = 1;
-        int pageSize = 10;
-        var accounts = new List<ChartOfAccount>
+        Int32 page = 1;
+        Int32 pageSize = 10;
+        List<ChartOfAccount> accounts = new List<ChartOfAccount>
         {
             new ChartOfAccount { Code = "1.01.01", Name = "Account 1" },
             new ChartOfAccount { Code = "1.01.02", Name = "Account 2" }
         };
-        int totalCount = 2;
+        Int32 totalCount = 2;
 
         _repositoryMock.Setup(repo => repo.GetPagedAsync(page, pageSize, null, null))
             .ReturnsAsync((accounts, totalCount));
 
         // Act
-        var result = await _service.GetPagedAsync(page, pageSize);
+        PaginatedResultDto<ChartOfAccount> result = await _service.GetPagedAsync(page, pageSize);
 
         // Assert
         result.Should().NotBeNull();
@@ -144,7 +167,11 @@ public class ChartOfAccountsServiceTests
     public async Task DeleteAsync_ShouldCallRepository()
     {
         // Arrange
-        var code = "1.01.01";
+        String code = "1.01.01";
+        
+        _deleteValidationChainBuilderMock.Setup(builder => 
+            builder.ValidateAsync(code)).Returns(Task.CompletedTask);
+            
         _repositoryMock.Setup(repo => repo.DeleteAsync(code))
             .Returns(Task.CompletedTask);
 
@@ -152,14 +179,16 @@ public class ChartOfAccountsServiceTests
         await _service.DeleteAsync(code);
 
         // Assert
+        _deleteValidationChainBuilderMock.Verify(builder => 
+            builder.ValidateAsync(code), Times.Once);
         _repositoryMock.Verify(repo => repo.DeleteAsync(code), Times.Once);
     }
 
     [Test]
-    public async Task CreateAsync_WithPostableParentCode_ShouldThrowValidationException()
+    public async Task CreateAsync_WithValidationFailure_ShouldThrowBusinessRuleValidationException()
     {
         // Arrange
-        var account = new ChartOfAccount
+        ChartOfAccount account = new ChartOfAccount
         {
             Code = "1.01.02.01",
             Name = "Test Account",
@@ -172,8 +201,9 @@ public class ChartOfAccountsServiceTests
             IdempotencyKey = Guid.NewGuid()
         };
 
-        _repositoryMock.Setup(repo => repo.IsPostableAsync(account.ParentCode))
-            .ReturnsAsync(true);
+        _createValidationChainBuilderMock.Setup(builder => 
+            builder.ValidateAsync(account))
+            .ThrowsAsync(new BusinessRuleValidationException("Validation failed"));
 
         // Act & Assert
         Func<Task> action = async () => await _service.CreateAsync(account);
@@ -181,10 +211,10 @@ public class ChartOfAccountsServiceTests
     }
 
     [Test]
-    public async Task CreateAsync_WithDuplicateIdempotencyKey_ShouldThrowValidationException()
+    public async Task CreateAsync_WithDataIntegrityViolation_ShouldUseExceptionHandler()
     {
         // Arrange
-        var account = new ChartOfAccount
+        ChartOfAccount account = new ChartOfAccount
         {
             Code = "1.01.02",
             Name = "Test Account",
@@ -196,11 +226,22 @@ public class ChartOfAccountsServiceTests
             IdempotencyKey = Guid.NewGuid()
         };
 
-        _repositoryMock.Setup(repo => repo.GetByIdempotencyKeyAsync(account.IdempotencyKey!.Value))
-            .ReturnsAsync(new ChartOfAccount { Code = "1.01.03" }); 
+        DataIntegrityViolationException exception = new DataIntegrityViolationException(
+            "Duplicate entry");
+
+        _createValidationChainBuilderMock.Setup(builder => 
+            builder.ValidateAsync(account)).Returns(Task.CompletedTask);
+        
+        _repositoryMock.Setup(repo => repo.CreateAsync(account))
+            .ThrowsAsync(exception);
+
+        _exceptionHandlerChainBuilderMock.Setup(builder => 
+            builder.HandleExceptionAsync(account, exception))
+            .ThrowsAsync(new BusinessRuleValidationException("Code already exists"));
 
         // Act & Assert
         Func<Task> action = async () => await _service.CreateAsync(account);
-        await action.Should().ThrowAsync<BusinessRuleValidationException>();
+        await action.Should().ThrowAsync<BusinessRuleValidationException>()
+            .WithMessage("Code already exists");
     }
 }

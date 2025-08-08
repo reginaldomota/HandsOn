@@ -55,7 +55,7 @@ public class ChartOfAccountsValidatorTests
         // Arrange
         var account = new ChartOfAccount
         {
-            Code = new string('1', 20), // Code is limited to 10 chars
+            Code = new string('1', 1025), // Code is limited to 1024 chars
             Name = "Teste",
             IsPostable = true,
             Type = "ATIVO",

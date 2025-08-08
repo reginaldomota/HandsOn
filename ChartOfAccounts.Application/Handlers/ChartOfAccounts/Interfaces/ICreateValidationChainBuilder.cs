@@ -1,6 +1,6 @@
 using ChartOfAccounts.Domain.Entities;
 
-namespace ChartOfAccounts.Application.Handlers.ChartOfAccounts;
+namespace ChartOfAccounts.Application.Handlers.ChartOfAccounts.Interfaces;
 
 public interface ICreateValidationChainBuilder
 {

@@ -5,6 +5,8 @@ using ChartOfAccounts.Application.Errors.Interfaces;
 using ChartOfAccounts.Application.Factories;
 using ChartOfAccounts.Application.Handlers.ChartOfAccounts;
 using ChartOfAccounts.Application.Handlers.ChartOfAccounts.Exceptions;
+using ChartOfAccounts.Application.Handlers.ChartOfAccounts.Exceptions.Interfaces;
+using ChartOfAccounts.Application.Handlers.ChartOfAccounts.Interfaces;
 using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.Application.Services;
 using ChartOfAccounts.CrossCutting.Context;

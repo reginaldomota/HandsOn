@@ -1,6 +1,6 @@
 ﻿using ChartOfAccounts.Application.DTOs.Common;
-using ChartOfAccounts.Application.Handlers.ChartOfAccounts;
-using ChartOfAccounts.Application.Handlers.ChartOfAccounts.Exceptions;
+using ChartOfAccounts.Application.Handlers.ChartOfAccounts.Exceptions.Interfaces;
+using ChartOfAccounts.Application.Handlers.ChartOfAccounts.Interfaces;
 using ChartOfAccounts.Application.Interfaces;
 using ChartOfAccounts.CrossCutting.Resources;
 using ChartOfAccounts.Domain.Entities;

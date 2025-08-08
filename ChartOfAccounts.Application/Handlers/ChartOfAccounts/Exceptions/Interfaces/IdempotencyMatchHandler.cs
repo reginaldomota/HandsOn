@@ -4,7 +4,7 @@ using ChartOfAccounts.Domain.Interfaces;
 using ChartOfAccounts.Domain.Services;
 using System.Threading.Tasks;
 
-namespace ChartOfAccounts.Application.Handlers.ChartOfAccounts.Exceptions;
+namespace ChartOfAccounts.Application.Handlers.ChartOfAccounts.Exceptions.Interfaces;
 
 public class IdempotencyMatchHandler : BaseExceptionHandler
 {

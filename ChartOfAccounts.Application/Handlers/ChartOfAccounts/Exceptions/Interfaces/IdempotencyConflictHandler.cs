@@ -6,7 +6,7 @@ using ChartOfAccounts.Domain.Interfaces;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace ChartOfAccounts.Application.Handlers.ChartOfAccounts.Exceptions;
+namespace ChartOfAccounts.Application.Handlers.ChartOfAccounts.Exceptions.Interfaces;
 
 public class IdempotencyConflictHandler : BaseExceptionHandler
 {

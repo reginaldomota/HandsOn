@@ -1,7 +1,7 @@
 using ChartOfAccounts.Domain.Entities;
 using ChartOfAccounts.Domain.Exceptions;
 
-namespace ChartOfAccounts.Application.Handlers.ChartOfAccounts.Exceptions;
+namespace ChartOfAccounts.Application.Handlers.ChartOfAccounts.Exceptions.Interfaces;
 
 public interface IExceptionHandler
 {
