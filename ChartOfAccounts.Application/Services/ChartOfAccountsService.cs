@@ -39,14 +39,14 @@ public class ChartOfAccountsService : IChartOfAccountsService
     {
         try
         {
-            if(account?.ParentCode?.Split(".").Count() >= MaxLevel)
+            if (account?.ParentCode?.Split(".").Count() >= MaxLevel)
                 throw new BusinessRuleValidationException(
                     string.Format(ErrorMessages.Error_ChartOfAccounts_Create_LimitReached, account.ParentCode));
 
-            if (!string.IsNullOrEmpty(account.ParentCode) && !string.IsNullOrEmpty(account.Code) && 
-                !account.Code.StartsWith($"{account.ParentCode}."))
+            string expectedParentCode = string.Join(".", account.Code.Split('.').SkipLast(1));
+            if (account.ParentCode != expectedParentCode)
                 throw new BusinessRuleValidationException(
-                    string.Format(ValidationMessages.Validation_ChartOfAccounts_CodeMustStartWithParent, account.Code, account.ParentCode));
+                    string.Format(ValidationMessages.Validation_ChartOfAccounts_CodeMustStartWithParent, account.Code, account.ParentCode, expectedParentCode));
 
             ChartOfAccount? parent = await _repository.GetByCodeAsync(account.ParentCode!);
 
@@ -54,22 +54,22 @@ public class ChartOfAccountsService : IChartOfAccountsService
                 throw new BusinessRuleValidationException(
                     string.Format(ValidationMessages.Validation_ChartOfAccounts_InvalidParentCode, account.ParentCode));
 
-            if (parent?.IsPostable == true)
+            if (parent.IsPostable == true)
                 throw new BusinessRuleValidationException(
                     string.Format(ValidationMessages.Validation_ChartOfAccounts_ParentIsPostable, account.ParentCode));
 
-            if(parent?.Type != account.Type)
+            if (parent.Type != account.Type)
                 throw new BusinessRuleValidationException(
                     string.Format(ValidationMessages.Validation_ChartOfAccounts_InvalidParentType, account.ParentCode, parent.Type, account.Type));
 
             await _repository.CreateAsync(account);
         }
-        catch(DataIntegrityViolationException ex)
+        catch (DataIntegrityViolationException ex)
         {
             ChartOfAccount? chekAccount = await _repository.GetByCodeAsync(account.Code);
 
-            if (chekAccount != null && 
-                chekAccount.IdempotencyKey == account.IdempotencyKey && 
+            if (chekAccount != null &&
+                chekAccount.IdempotencyKey == account.IdempotencyKey &&
                 ContentHashGenerator.ComputeFor(account) == ContentHashGenerator.ComputeFor(chekAccount))
                 return;
 
